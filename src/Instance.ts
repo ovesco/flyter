@@ -48,7 +48,7 @@ class Instance {
     this.setLoading(true);
     return new Promise(async () => {
       const session = await this.createSession();
-      await this.session.openEdition();
+      await (this.session as EditionSession).openEdition();
       this.setLoading(false);
       return session;
     });
@@ -96,12 +96,12 @@ class Instance {
 
   buildType() {
     const { typeConfig, type } = this.typeGetter(resolve(resolve(this.config.type.name, this), this));
-    return new type(() => this.session, merge(typeConfig, resolve(this.config.type.config, this)));
+    return new type(() => (this.session as EditionSession), merge(typeConfig, resolve(this.config.type.config, this)));
   }
 
   buildRenderer() {
     const { rendererConfig, renderer } = this.rendererGetter(resolve(this.config.renderer.name, this));
-    return new renderer(() => this.session, merge(rendererConfig, resolve(this.config.renderer.config, this)));
+    return new renderer(() => (this.session as EditionSession), merge(rendererConfig, resolve(this.config.renderer.config, this)));
   }
 
   private async createSession() {
@@ -116,7 +116,7 @@ class Instance {
   private setLoading(loading: boolean) {
     if (this.loading === loading) return;
     this.config.onLoading(loading, this);
-    const loadingContainer = this.domTarget.querySelector(`[${ATTR_LOADING_CONTAINER}]`);
+    const loadingContainer = this.domTarget.querySelector(`[${ATTR_LOADING_CONTAINER}]`) as HTMLElement;
     if (loading) {
       loadingContainer.appendChild(parseTemplate(resolve(this.config.template.loading, this) as string));
     } else {
@@ -127,10 +127,11 @@ class Instance {
 
   private buildFlyterTarget() {
     const markup = parseTemplate(resolve(this.config.template.read, this));
-    const element = markup.querySelector(`[${ATTR_READ_CONTAINER}]`);
+    const element = markup.querySelector(`[${ATTR_READ_CONTAINER}]`) as HTMLElement;
     const trigger = resolve(this.config.trigger, this);
     if (trigger !== 'none') {
-      element.addEventListener(trigger, this.listener, true);
+      const event = trigger === 'click' ? 'click' : 'mouseover';
+      element.addEventListener(event, this.listener, true);
     }
     this.domTarget.append(markup);
     return element as HTMLElement;

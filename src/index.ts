@@ -1,3 +1,4 @@
+import { createPopper } from '@popperjs/core';
 import Flyter from './Flyter';
 
 import PopupRenderer, { PopupConfig } from './renderer/PopupRenderer';

@@ -5,20 +5,25 @@ import PopupRenderer, {
   ATTR_POPUP_ERROR_CONTAINER,
   ATTR_POPUP_LOADING,
 } from '../renderer/PopupRenderer';
-import { parseTemplate, promisify, resolveAsync } from '../util';
+import { parseTemplate } from '../util';
 import Theme from '../Theme';
 import { ATTR_ACTION_CONTAINER, ATTR_CANCEL_BTN, ATTR_EDIT_CONTAINER, ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER, ATTR_SUBMIT_BTN } from '../config';
 
 interface BootstrapThemeConfig {
   size: 'xs' | 'md' | 'lg' | 'xl' | 'sm';
-
+  okBtntnTheme: string;
+  cancelBtnTheme: string;
+  spinnerTheme: string;
 }
 
 export const BootstrapThemeBaseConfig: BootstrapThemeConfig = {
-  size: 'md',
+  size: 'sm',
+  okBtntnTheme: 'primary',
+  cancelBtnTheme: 'default',
+  spinnerTheme: 'primary',
 };
 
-export default ({ size }: BootstrapThemeConfig): Theme => {
+export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme }: BootstrapThemeConfig): Theme => {
   return {
     types: {
       text: {
@@ -52,7 +57,7 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
           </div>`
           ,
         onInit(renderer: PopupRenderer) {
-          const element = renderer.getMarkup();
+          const element = renderer.getMarkup() as HTMLElement;
 
           const updatePlacement = (placement: string) => {
             element.className = `popover show bs-popover-${placement}`;
@@ -71,24 +76,29 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
           });
 
           observer.observe(element, { attributes: true });
-          updatePlacement(renderer.getPopperInstance().state.placement);
+          const instance = renderer.getPopperInstance();
+          if (instance !== null) updatePlacement(instance.state.placement);
         },
       }
     },
     config: {
       onError(instance) {
-        const markup = instance.getCurrentSession().getSessionMarkup();
-        [...markup.querySelectorAll('input'), markup.querySelectorAll('textarea')].forEach((input) => {
+        const session = instance.getCurrentSession();
+        if (session === null) return;
+        const markup = session.getSessionMarkup();
+        [...Array.from(markup.querySelectorAll('input')), markup.querySelectorAll('textarea')].forEach((input) => {
           (input as HTMLElement).classList.add('is-invalid');
         });
       },
       onRendererLoading(status, instance) {
-        const markup = instance.getCurrentSession().getSessionMarkup();
-        const loadingMarkup = parseTemplate(`<span class="spinner-border spinner-border-${size}" role="status" aria-hidden="true"></span>`); 
+        const session = instance.getCurrentSession();
+        if (session === null) return;
+        const markup = session.getSessionMarkup();
+        const loadingMarkup = parseTemplate(`<span class="spinner-border text-${spinnerTheme} spinner-border-${size}" role="status" aria-hidden="true"></span>`); 
         const btn = markup.querySelector(`[${ATTR_SUBMIT_BTN}]`);
         if (btn) {
           if (status) btn.insertAdjacentElement('afterbegin', loadingMarkup);
-          else btn.removeChild(btn.firstChild);  
+          else btn.removeChild(btn.firstChild as ChildNode);  
         }
       },
       template: {
@@ -102,8 +112,8 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
         `,
         buttons: `
           <div class="btn-group">
-            <button type="button" class="btn btn-primary btn-${size}" ${ATTR_SUBMIT_BTN}></button>
-            <button type="button" class="btn btn-primary btn-${size}" ${ATTR_CANCEL_BTN}></button>
+            <button type="button" class="btn btn-${okBtntnTheme} btn-${size}" ${ATTR_SUBMIT_BTN}></button>
+            <button type="button" class="btn btn-${cancelBtnTheme} btn-${size}" ${ATTR_CANCEL_BTN}></button>
           </div>
         `,
         read: `
@@ -113,7 +123,7 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
           </div>
         `,
         loading: `
-          <div class="ml-2 spinner-border text-primary spinner-border-${size}"></div>
+          <div class="ml-2 spinner-border text-${spinnerTheme} spinner-border-${size}"></div>
         `,
       },
     }

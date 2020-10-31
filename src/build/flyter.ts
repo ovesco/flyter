@@ -1,9 +1,9 @@
-import FlyterCtr from '../src/Flyter';
-import PopupRenderer, { PopupConfig } from '../src/renderer/PopupRenderer';
-import TextType, { baseTextConfig } from '../src/type/TextType';
-import SelectType, { baseSelectConfig } from '../src/type/SelectType';
-import RadioType, { baseRadioConfig } from '../src/type/RadioType';
-import CheckboxType, { baseCheckboxConfig } from '../src/type/CheckboxType';
+import FlyterCtr from '../Flyter';
+import PopupRenderer, { PopupConfig } from '../renderer/PopupRenderer';
+import TextType, { baseTextConfig } from '../type/TextType';
+import SelectType, { baseSelectConfig } from '../type/SelectType';
+import RadioType, { baseRadioConfig } from '../type/RadioType';
+import CheckboxType, { baseCheckboxConfig } from '../type/CheckboxType';
 
 export const Flyter = FlyterCtr;
 const flyter = new Flyter();

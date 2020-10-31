@@ -41,7 +41,7 @@ export const PopupConfig: PopupConfigType = {
   onShow: () => null,
   onHide: () => null,
   // @ts-ignore
-  popper: window.Popper.createPopper,
+  popper: window.Popper ? window.Popper.createPopper : null,
   transitionDuration: 300,
   title: null,
   closeOnClickOutside: true,
@@ -69,7 +69,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
 
   private listener: (e: MouseEvent) => void | null;
 
-  private popperInstance: PopperInstance;
+  private popperInstance: PopperInstance | null;
 
   getPopperInstance() {
     return this.popperInstance;
@@ -80,7 +80,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   }
 
   async init() {
-
+    console.log('init');
     this.markup = parseTemplate(await promisify(resolveAsync(this.config.popupTemplate, this)));
     this.transitionDuration = parseInt(await promisify(resolveAsync(this.config.transitionDuration, this)) as any, 10);
     this.closeOnClickOutside = await(promisify(resolveAsync(this.config.closeOnClickOutside, this)));
@@ -129,20 +129,20 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     }
     deleteNodeChildren(container);
     container.appendChild(markup);
-    this.markup.style.opacity = '1';
-    this.popperInstance.update();
+    (this.markup as HTMLElement).style.opacity = '1';
+    (this.popperInstance as PopperInstance).update();
     await promisify(this.config.onShow(this));
   }
 
   async destroy() {
-    this.markup.style.opacity = '0';
+    (this.markup as HTMLElement).style.opacity = '0';
     await new Promise((resolve) => {
       setTimeout(() => {
         if (this.closeOnClickOutside) {
           document.removeEventListener('click', this.listener, true);
         }
-        this.markup.remove();
-        this.popperInstance.destroy();
+        (this.markup as HTMLElement).remove();
+        (this.popperInstance as PopperInstance).destroy();
         this.markup = null;
         this.popperInstance = null;
         promisify(this.config.onHide(this)).then(resolve);
@@ -158,7 +158,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   }
 
   private getElement(attr: string) {
-    return this.markup.querySelector(`[${attr}]`) as HTMLElement;
+    return (this.markup as HTMLElement).querySelector(`[${attr}]`) as HTMLElement;
   }
 }
 

@@ -1,5 +1,5 @@
 import { resolve } from '../util';
-import BaseChoiceType, { BaseChoiceConfig, ATTR_DISABLABLE } from './BaseChoiceType';
+import BaseChoiceType, { BaseChoiceConfig, ATTR_DISABLABLE, DataSource } from './BaseChoiceType';
 
 interface SelectConfig extends BaseChoiceConfig {
   multiple: boolean;
@@ -18,19 +18,19 @@ class SelectType extends BaseChoiceType<SelectConfig, HTMLSelectElement> {
   setValue(value: any) {
     const values = !Array.isArray(value) ? [value] : value;
     values.forEach((val) => {
-      [...this.markup.options].find((it) => `${it.value}` === `${val}`).selected = true;
+      (Array.from(this.markup.options).find((it) => `${it.value}` === `${val}`) as HTMLOptionElement).selected = true;
     });
   }
 
   getCurrentValue() {
     if (!this.config.multiple) return this.markup.value;
-    const values = [...this.markup.options].filter((it) => it.selected).map((it) => it.value);
+    const values = Array.from(this.markup.options).filter((it) => it.selected).map((it) => it.value);
     return values.length > 0 ? values : resolve(this.getSession().getInstance().getConfig().emptyValue);
   }
 
   getReadableValue(value: any[]) {
     const separator = this.config.displaySeparator;
-    return value.map((v) => this.dataSource.find((it) => `${it.value}` === `${v}`).label).join(separator);
+    return value.map((v) => (this.dataSource.find((it) => `${it.value}` === `${v}`) as DataSource[0]).label).join(separator);
   }
 
   getTemplate() {

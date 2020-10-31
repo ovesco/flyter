@@ -36,7 +36,7 @@ export default interface Config {
   onCancel: (instance: Instance) => Promise<any> | any;
   validate: (value: any, instance: Instance) => Promise<Error | boolean> | Error | boolean;
   server: {
-    url: string | ((instance: Instance) => string);
+    url: string | null | ((instance: Instance) => string);
     queryParams: anyConfigObject | ((instance: Instance) => anyConfigObject);
     method: string | ((instance: Instance) => string);
     resultFormatter: (data: any, value: any) => any;
@@ -79,14 +79,14 @@ export const baseConfig: Config = {
   server: {
     url: null,
     queryParams: {},
-    resultFormatter: (d: any, value: any) => value,
+    resultFormatter: ({}, value: any) => value,
     method: 'POST',
   },
   errorFormatter: (error) => error.message,
   onOpen: () => console.log('on open'),
   onClose: () => console.log('on close'),
   onLoading: (status) => console.log('on loading', status),
-  onRendererLoading: (status) => console.log('on renderer loading', status);
+  onRendererLoading: (status) => console.log('on renderer loading', status),
   onDestroy: () => console.log('on destroy'),
   onSubmit: async (value, onSuccess, onError, instance) => {
     console.log('onSubmit');
@@ -158,7 +158,7 @@ export const attrConfigResolver = (element: HTMLElement) => {
     'cancelButton.enabled'
   ];
 
-  const attrs = [...element.attributes].filter((it) => it.nodeName.startsWith('data-flyter-config'));
+  const attrs = Array.from(element.attributes).filter((it) => it.nodeName.startsWith('data-flyter-config'));
   const config = {} as anyConfigObject;
   let correct = true;
 

@@ -1,5 +1,5 @@
 import { resolve } from '../util';
-import BaseChoiceType, { BaseChoiceConfig, ATTR_DISABLABLE } from './BaseChoiceType';
+import BaseChoiceType, { BaseChoiceConfig, ATTR_DISABLABLE, DataSource } from './BaseChoiceType';
 
 interface CheckboxConfig extends BaseChoiceConfig {
   displaySeparator: string;
@@ -30,7 +30,7 @@ class CheckboxType extends BaseChoiceType<CheckboxConfig, HTMLDivElement> {
   getReadableValue(value: any | any[]) {
     const values = Array.isArray(value) ? value : [value];
     const separator = this.config.displaySeparator;
-    return values.map((v) => this.dataSource.find((it) => `${it.value}` === `${v}`).label).join(separator);
+    return values.map((v) => (this.dataSource.find((it) => `${it.value}` === `${v}`) as DataSource[0]).label).join(separator);
   }
 
   getTemplate() {
@@ -45,7 +45,7 @@ class CheckboxType extends BaseChoiceType<CheckboxConfig, HTMLDivElement> {
   }
 
   getCheckbox() {
-    return [...this.markup.querySelectorAll('input[type="checkbox"]')] as HTMLInputElement[];
+    return Array.from(this.markup.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
   }
 }
 

@@ -27,7 +27,7 @@ abstract class BaseChoiceType<T extends BaseChoiceConfig, U extends HTMLElement>
   }
 
   disable(status: boolean) {
-    this.markup.querySelectorAll(`[${ATTR_DISABLABLE}]`).forEach((it: HTMLInputElement) => it.disabled = status);
+    this.markup.querySelectorAll(`[${ATTR_DISABLABLE}]`).forEach((it) => (it as HTMLInputElement).disabled = status);
   }
 
   onDestroy() {

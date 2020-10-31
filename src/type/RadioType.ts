@@ -16,7 +16,7 @@ export const baseRadioConfig: RadioConfig = {
 class RadioType extends BaseChoiceType<RadioConfig, HTMLDivElement> {
 
   setValue(value: any) {
-    this.getRadios().find((it) => `${it.value}` === `${value}`).checked = true;
+    (this.getRadios().find((it) => `${it.value}` === `${value}`) as HTMLInputElement).checked = true;
   }
 
   getCurrentValue() {
@@ -41,7 +41,7 @@ class RadioType extends BaseChoiceType<RadioConfig, HTMLDivElement> {
   }
 
   getRadios() {
-    return [...this.markup.querySelectorAll('input[type="radio"]')] as HTMLInputElement[];
+    return Array.from(this.markup.querySelectorAll('input[type="radio"]')) as HTMLInputElement[];
   }
 }
 

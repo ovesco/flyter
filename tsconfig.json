@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+      "lib": ["dom", "ES2017"],
+      "esModuleInterop": true,
+      "module": "CommonJS",
+      "target": "ES5",
+      "strictPropertyInitialization": false,
+      "strict": true,
+      "outDir": "./dist",
+      "declaration": true,
+      "rootDir": "src",
+      "noUnusedParameters": true,
+      "moduleResolution": "node"
+  },
+  "exclude": [
+      "dist",
+      "node_modules",
+      "src/build"
+  ]
+}
