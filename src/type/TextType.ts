@@ -1,5 +1,5 @@
 import { FlyterType } from "../types";
-import { parseTemplate, resolveFunction } from "../util";
+import { parseTemplate } from "../util";
 
 const FLYTER_INPUT = 'data-flyter-text-input';
 
@@ -10,7 +10,7 @@ type Config = {
   treatEmptyAsNull: boolean;
 }
 
-export const TextTypeConfig: Config = {
+export const baseTextConfig: Config = {
   class: '',
   type: 'text',
   attributes: '',
@@ -43,7 +43,7 @@ class TextType extends FlyterType<Config> {
     this.textElement.disabled = status;
   }
 
-  async onDestroy() {
+  onDestroy() {
   }
 
   private getTemplate() {

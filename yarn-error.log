@@ -1,0 +1,40 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\yarn\bin\yarn.js add sass -D
+
+PATH: 
+  C:\nvm\v14.0.0\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin;C:\Users\Guillaume Hochet\Desktop\flyter\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\wamp64\bin\php\php7.0.10;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\Java\jdk1.8.0_172\bin;C:\Android\android-sdk\tools;C:\Android\android-sdk\platform-tools;C:\Program Files\dotnet\;C:\Program Files\Java\jdk1.8.0_201\bin;C:\Users\Guillaume Hochet\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\PuTTY\;C:\Users\Guillaume Hochet\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\Guillaume Hochet\AppData\Local\Programs\Python\Python38\;C:\Users\Guillaume Hochet\.cargo\bin;C:\Users\Guillaume Hochet\AppData\Local\Microsoft\WindowsApps;C:\Users\Guillaume Hochet\AppData\Roaming\Composer\vendor\bin;C:\Program Files\MongoDB\Server\3.4\bin;C:\xampp\php;C:\maven\bin;C:\Users\Guillaume Hochet\AppData\Roaming\npm;C:\Program Files\Docker Toolbox;C:\Users\Guillaume Hochet\Documents\blackfire;C:\Program Files\heroku\bin;C:\Users\Guillaume Hochet\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Guillaume Hochet\.deno\bin;D:\flutter\bin;C:\Users\Guillaume Hochet\AppData\Local\Microsoft\WindowsApps;
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.0.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Guillaume Hochet\Desktop\flyter\node_modules\deasync\bin\win32-x64-node-14\deasync.node'
+
+npm manifest: 
+  {
+    "dependencies": {
+      "@popperjs/core": "^2.5.3",
+      "@types/deepmerge": "^2.2.0",
+      "deepmerge": "^4.2.2",
+      "dompurify": "^2.2.0",
+      "parcel-bundler": "^1.12.4"
+    },
+    "devDependencies": {
+      "@types/dompurify": "^2.0.4"
+    },
+    "scripts": {
+      "start": "parcel index.html"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

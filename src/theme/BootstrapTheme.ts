@@ -36,10 +36,8 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
     },
     renderers: {
       popup: {
-        popupTemplate: async (renderer: PopupRenderer) => {
-          const placement = (await promisify(resolveAsync(renderer.getRendererConfig().popperConfig))).placement;
-          return `
-          <div class="popover show bs-popover-${placement}">
+        popupTemplate:  `
+          <div class="popover show bs-popover-top ">
             <div class="arrow" ${ATTR_POPUP_ARROW}></div>
             <h3 class="popover-header" ${ATTR_POPUP_TITLE}></h3>
             <div class="popover-body">
@@ -51,7 +49,29 @@ export default ({ size }: BootstrapThemeConfig): Theme => {
               </div>
               <div class="invalid-feedback d-block" ${ATTR_POPUP_ERROR_CONTAINER}></div>
             </div>
-          </div>`;
+          </div>`
+          ,
+        onInit(renderer: PopupRenderer) {
+          const element = renderer.getMarkup();
+
+          const updatePlacement = (placement: string) => {
+            element.className = `popover show bs-popover-${placement}`;
+            element.setAttribute('x-placement', placement);
+          };
+
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes') {
+                const placement = element.getAttribute('data-popper-placement');
+                if (element.getAttribute('x-placement') !== placement && placement !== null) {
+                  updatePlacement(placement);
+                }
+              }
+            });
+          });
+
+          observer.observe(element, { attributes: true });
+          updatePlacement(renderer.getPopperInstance().state.placement);
         },
       }
     },

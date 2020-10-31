@@ -162,40 +162,24 @@ export const attrConfigResolver = (element: HTMLElement) => {
   const config = {} as anyConfigObject;
   let correct = true;
 
-  const findRealKey = (realConfigLevel: anyConfigObject, key: string) => {
-    const baseConfigKeys = Object.keys(realConfigLevel);
-    const realKey = baseConfigKeys.find((k) => k.toLowerCase() === key);
-    if (realKey === undefined) {
-      console.warn(`Attribute config key '${key}' is incorrect`);
-      correct = false;
-    }
-    return realKey;
-  }
-
   attrs.forEach((it) => {
-    const configKey = it.nodeName.replace('data-flyter-config-', '').split('-');
+    const configKey = it.nodeName.replace('data-flyter-config-', '').split('-')
+      .map((part) => part.replace(/_([a-z])/g, (c) => c.toUpperCase()));
 
     let current = config;
-    let currentBaseConfig = baseConfig;
     let fullDotKey = '';
     for (let i = 0; i < configKey.length - 1; i++) {
 
-      const realKey = findRealKey(currentBaseConfig, configKey[i]);
-
-      if (realKey === undefined) {
-        break;
+      const keyElement = configKey[i];
+      if (!current[keyElement]) {
+        current[keyElement] = {} as anyConfigObject;
       }
 
-      if (!current[realKey]) {
-        current[realKey] = {} as anyConfigObject;
-      }
-
-      current = current[realKey];
-      currentBaseConfig = currentBaseConfig[realKey];
-      fullDotKey += `${realKey}.`;
+      current = current[keyElement];
+      fullDotKey += `${keyElement}.`;
     }
 
-    const lastKey = findRealKey(currentBaseConfig, configKey[configKey.length - 1]);
+    const lastKey = configKey[configKey.length - 1];
     fullDotKey += lastKey;
 
     let value: any = it.nodeValue;

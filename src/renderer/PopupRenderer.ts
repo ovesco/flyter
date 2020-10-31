@@ -1,4 +1,4 @@
-import { createPopper, Instance as PopperInstance } from '@popperjs/core';
+import { Instance as PopperInstance } from '@popperjs/core';
 import merge from 'deepmerge';
 
 import { FlyterRenderer, anyConfigObject } from "../types";
@@ -14,6 +14,9 @@ type PopupConfigType = {
   closeOnClickOutside: valOrAsync<boolean>;
   popupTemplate: valOrAsync<string>;
   popupClass: valOrAsync<string>;
+  onInit: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
+  onShow: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
+  onHide: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
 };
 
 const ATTR_POPUP_ARROW = 'data-flyter-popup-arrow';
@@ -34,7 +37,11 @@ export const PopupConfig: PopupConfigType = {
   popperConfig: {
     placement: 'top',
   },
-  popper: createPopper,
+  onInit: () => null,
+  onShow: () => null,
+  onHide: () => null,
+  // @ts-ignore
+  popper: window.Popper.createPopper,
   transitionDuration: 300,
   title: null,
   closeOnClickOutside: true,
@@ -63,6 +70,14 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   private listener: (e: MouseEvent) => void | null;
 
   private popperInstance: PopperInstance;
+
+  getPopperInstance() {
+    return this.popperInstance;
+  }
+
+  getMarkup() {
+    return this.markup;
+  }
 
   async init() {
 
@@ -97,6 +112,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     });
 
     this.popperInstance = this.config.popper(this.getSession().getFlyterElement(), this.markup, popperConfig);
+    await promisify(this.config.onInit(this));
   }
 
   error(error: Error) {
@@ -115,6 +131,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     container.appendChild(markup);
     this.markup.style.opacity = '1';
     this.popperInstance.update();
+    await promisify(this.config.onShow(this));
   }
 
   async destroy() {
@@ -128,7 +145,7 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
         this.popperInstance.destroy();
         this.markup = null;
         this.popperInstance = null;
-        resolve();
+        promisify(this.config.onHide(this)).then(resolve);
       }, this.transitionDuration);
     });
   }
