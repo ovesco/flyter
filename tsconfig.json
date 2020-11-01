@@ -10,7 +10,8 @@
       "declaration": true,
       "rootDir": "src",
       "noUnusedParameters": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "sourceMap": true
   },
   "exclude": [
       "dist",

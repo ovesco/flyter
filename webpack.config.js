@@ -11,7 +11,7 @@ module.exports = configs.map((name) => ({
     mode: 'production',
     entry: `./src/build/build.${name}.ts`,
     output: {
-        path: path.resolve( __dirname, 'dist' ),
+        path: path.resolve( __dirname, 'bundles' ),
         filename: `flyter.${name}.min.js`,
     },
 
@@ -30,7 +30,7 @@ module.exports = configs.map((name) => ({
                                 declaration: false,
                                 module: "CommonJS",
                                 sourceMap: false,  
-                                outDir: './dist'
+                                outDir: './bundles'
                             }                      
                         }
                     }
