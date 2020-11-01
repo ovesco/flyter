@@ -1,14 +1,13 @@
 const path = require('path');
 
-const tsConfigNoTypes = { declaration: false };
 const configs = [
-    { name: 'vanilla', compilerOptions: tsConfigNoTypes },
-    { name: 'bootstrap', compilerOptions: tsConfigNoTypes },
-    { name: 'popper', compilerOptions: tsConfigNoTypes },
-    { name: 'popper-bootstrap', compilerOptions: {} }
+    'vanilla',
+    'bootstrap',
+    'popper',
+    'popper-bootstrap',
 ];
 
-module.exports = configs.map(({ name, compilerOptions }) => ({
+module.exports = configs.map((name) => ({
     mode: 'production',
     entry: `./src/build/build.${name}.ts`,
     output: {
@@ -27,7 +26,12 @@ module.exports = configs.map(({ name, compilerOptions }) => ({
                     {
                         loader: 'ts-loader',
                         options: {
-                            compilerOptions,
+                            compilerOptions: {
+                                declaration: false,
+                                module: "CommonJS",
+                                sourceMap: false,  
+                                outDir: './dist'
+                            }                      
                         }
                     }
                 ]                

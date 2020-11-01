@@ -6,7 +6,7 @@
       "target": "ES5",
       "strictPropertyInitialization": false,
       "strict": true,
-      "outDir": "./dist",
+      "outDir": "./lib",
       "declaration": true,
       "rootDir": "src",
       "noUnusedParameters": true,

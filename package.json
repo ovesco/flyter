@@ -1,11 +1,26 @@
 {
+  "name": "flyter",
+  "version": "1.0.0",
+  "description": "An inline editing library",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ovesco/flyter.git"
+  },
+  "keywords": [
+    "inline",
+    "editing",
+    "popup",
+    "editable"
+  ],
+  "author": "ovesco",
+  "license": "Apache-2.0",
   "dependencies": {
     "deepmerge": "^4.2.2",
     "dompurify": "^2.2.0"
   },
   "devDependencies": {
     "@types/dompurify": "^2.0.4",
-    "parcel-bundler": "^1.12.4",
     "@types/deepmerge": "^2.2.0",
     "parallel-webpack": "^2.6.0",
     "ts-loader": "^8.0.7",
@@ -18,6 +33,6 @@
   },
   "scripts": {
     "start": "parcel index.html",
-    "build": "parallel-webpack"
+    "build": "parallel-webpack && tsc"
   }
 }
