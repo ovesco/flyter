@@ -1,8 +1,8 @@
 {
   "name": "flyter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An inline editing library",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ovesco/flyter.git"

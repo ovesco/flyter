@@ -41,7 +41,7 @@ export const PopupConfig: PopupConfigType = {
   onShow: () => null,
   onHide: () => null,
   // @ts-ignore
-  popper: window.Popper ? window.Popper.createPopper : null,
+  popper: window !== undefined && window.Popper ? window.Popper.createPopper : null,
   transitionDuration: 300,
   title: null,
   closeOnClickOutside: true,
