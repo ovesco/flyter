@@ -32,7 +32,7 @@ class TextType extends FlyterType<Config> {
 
   getCurrentValue() {
     const { value } = this.textElement;
-    return value.trim() === '' && this.config.treatEmptyAsNull ? null : value;
+    return value.trim() === '' && this.config.treatEmptyAsNull ? this.getSession().getInstance().getConfig('emptyValue') : value;
   }
 
   getReadableValue(val: any) {

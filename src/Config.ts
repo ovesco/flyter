@@ -1,6 +1,5 @@
 import Instance from "./Instance";
 import { anyConfigObject } from "./types";
-import { resolve } from './util';
 
 const ATTR_EDIT_CONTAINER = 'data-flyter-edit';
 const ATTR_ACTION_CONTAINER = 'data-flyter-action';
@@ -25,14 +24,13 @@ export default interface Config {
   initialValue: any | ((instance: Instance) => any);
   emptyValueDisplay: string | ((instance: Instance) => string);
   valueFormatter: (value: any, instance: Instance) => string | Promise<string>;
-  errorFormatter: (error: Error, instance: Instance) => string;
   onOpen: (instance: Instance) => Promise<any> | any;
   onClose: (instance: Instance) => Promise<any> | any;
   onDestroy: (instance: Instance) => Promise<any> | any;
-  onSubmit: (value: any, onSuccess: (val?: any) => any, onError: (err: Error) => any, instance: Instance) => any;
+  onSubmit: (value: any, instance: Instance) => Promise<any> | any;
   onLoading: (status: boolean, instance: Instance) => any;
   onRendererLoading: (status: boolean, instance: Instance) => any;
-  onError: (instance: Instance) => Promise<any> | any;
+  onError: (error: Error, instance: Instance) => Promise<any> | any;
   onCancel: (instance: Instance) => Promise<any> | any;
   validate: (value: any, instance: Instance) => Promise<Error | boolean> | Error | boolean;
   server: {
@@ -82,28 +80,25 @@ export const baseConfig: Config = {
     resultFormatter: ({}, value: any) => value,
     method: 'POST',
   },
-  errorFormatter: (error) => error.message,
   onOpen: () => console.log('on open'),
   onClose: () => console.log('on close'),
   onLoading: (status) => console.log('on loading', status),
   onRendererLoading: (status) => console.log('on renderer loading', status),
   onDestroy: () => console.log('on destroy'),
-  onSubmit: async (value, onSuccess, onError, instance) => {
-    console.log('onSubmit');
-    const { resultFormatter } = instance.getConfig().server;
-    const url = resolve(instance.getConfig().server.url, instance);
-    const method = resolve(instance.getConfig().server.method, instance);
-    const queryParams = resolve(instance.getConfig().server.queryParams, instance);
+  onSubmit: async (value, instance) => {
+    const resultFormatter = instance.getConfig('server.resultFormatter', true);
+    const url = instance.getConfig('server.url');
+    const method = instance.getConfig('server.method');
+    const queryParams = instance.getConfig('server.queryParams');
     if (url === null) {
-      onSuccess();
+      return;
     } else {
-      fetch(url, { method, body: JSON.stringify({ ...queryParams, value }) })
-        .then((res) => res.json())
-          .then((json) => onSuccess(resultFormatter(json, value)))
-        .catch(onError);
+      const res = await fetch(url, { method, body: JSON.stringify({ ...queryParams, value }) });
+      const json = await res.json();
+      return resultFormatter(json, value);
     }
   },
-  onError: (err) => console.log('on error', err),
+  onError: (err) => console.log('Flyter error', err),
   onCancel: () => console.log('on cancel'),
   validate: () => true,
   type: {
@@ -158,13 +153,15 @@ export const attrConfigResolver = (element: HTMLElement) => {
     'cancelButton.enabled'
   ];
 
-  const attrs = Array.from(element.attributes).filter((it) => it.nodeName.startsWith('data-flyter-config'));
+  const keyNumberParsable: string[] = [];
+
+  const attrs = Array.from(element.attributes).filter((it) => it.nodeName.startsWith('data-fcnf'));
   const config = {} as anyConfigObject;
   let correct = true;
 
   attrs.forEach((it) => {
-    const configKey = it.nodeName.replace('data-flyter-config-', '').split('-')
-      .map((part) => part.replace(/_([a-z])/g, (c) => c.toUpperCase()));
+    const configKey = it.nodeName.replace('data-fcnf-', '').split('-')
+      .map((str) => str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('_', '')));
 
     let current = config;
     let fullDotKey = '';
@@ -187,6 +184,8 @@ export const attrConfigResolver = (element: HTMLElement) => {
       value = JSON.parse(value);
     } else if (keyBooleanParsable.includes(fullDotKey)) {
       value = ['1', 'true'].includes(value.trim()) ? true : false;
+    } else if (keyNumberParsable.includes(fullDotKey)) {
+      value = parseInt(value, 10);
     }
 
     if (lastKey) {

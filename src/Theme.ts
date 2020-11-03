@@ -7,4 +7,10 @@ type Theme = {
   config?: DeepPartial<Config>;
 };
 
+export const defaultTheme: Theme = {
+  renderers: {},
+  types: {},
+  config: {},
+};
+
 export default Theme;

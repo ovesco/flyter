@@ -84,6 +84,10 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     this.markup = parseTemplate(await promisify(resolveAsync(this.config.popupTemplate, this)));
     this.transitionDuration = parseInt(await promisify(resolveAsync(this.config.transitionDuration, this)) as any, 10);
     this.closeOnClickOutside = await(promisify(resolveAsync(this.config.closeOnClickOutside, this)));
+    const popupClass = await promisify(resolveAsync(this.config.popupClass, this));
+    if (popupClass.trim() !== '' && popupClass !== null) {
+      this.markup.classList.add(popupClass);
+    }
 
     this.markup.style.opacity = '0';
     this.markup.style.transition = `opacity ${this.transitionDuration / 1000}s`;
@@ -92,7 +96,12 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
       if (this.loading) return;
       if (this.markup === null) return;
       if (this.markup.contains(e.target as Node)) return;
-      this.getSession().closeSession();
+
+      if (this.getSession().getInstance().getDomTarget().contains(e.target as Node)) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      this.getSession().cancel();
     };
 
     if (this.closeOnClickOutside) {

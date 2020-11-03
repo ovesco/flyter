@@ -1,6 +1,8 @@
-import flyter from './flyter';
-import BootstrapTheme, { BootstrapThemeBaseConfig } from '../theme/BootstrapTheme';
+import flyter, { loadBootstrapTheme } from '../index';
 
-flyter.registerTheme('bootstrap', BootstrapTheme, BootstrapThemeBaseConfig);
+loadBootstrapTheme();
 
 export default flyter;
+
+// @ts-ignore
+window.flyter = flyter;

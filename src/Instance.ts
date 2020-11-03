@@ -1,6 +1,7 @@
 import merge from 'deepmerge';
 
-import Config, { ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from './Config';
+import ConfigResolver from './ConfigResolver';
+import Config, {  ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from './Config';
 import EditionSession from './EditionSession';
 import { typeData, rendererData, DeepPartial } from './types';
 import { promisify, deleteNodeChildren, parseTemplate, resolve } from './util';
@@ -17,27 +18,34 @@ class Instance {
 
   private listener: (e: MouseEvent) => void;
 
+  private configResolver: ConfigResolver;
+
   constructor(private domTarget: HTMLElement, private config: Config, private typeGetter: (name: string) => typeData, private rendererGetter: (name: string) => rendererData) {
+    this.configResolver = new ConfigResolver(config, this);
     this.value = resolve(config.initialValue, this);
     this.listener = () => this.open();
     this.flyterElement = this.buildFlyterTarget();
     this.refresh();
   }
 
-  getConfig() {
-    return this.config;
+  getDomTarget() {
+    return this.domTarget;
+  }
+
+  getConfig(key: string, callback: boolean = false) {
+    return this.configResolver.get(key, callback);
+  }
+
+  getRawConfig() {
+    return this.configResolver.getConfig();
   }
 
   updateConfig(config: DeepPartial<Config>) {
-    this.config = merge(this.config, config) as Config;
+    this.configResolver.update(config);
   }
 
   getCurrentSession() {
     return this.session;
-  }
-
-  getTarget() {
-    return this.domTarget;
   }
 
   getFlyterElement() {
@@ -45,6 +53,7 @@ class Instance {
   }
 
   async open() {
+    if (this.session) return;
     this.setLoading(true);
     return new Promise(async () => {
       const session = await this.createSession();
@@ -73,7 +82,7 @@ class Instance {
   }
 
   async refresh() {
-    if (resolve(this.config.emptyValue, this) === this.value) {
+    if (this.getConfig('emptyValue') === this.value) {
       this.flyterElement.innerHTML = resolve(this.config.emptyValueDisplay, this);
     }
     else {
@@ -95,13 +104,13 @@ class Instance {
   }
 
   buildType() {
-    const { typeConfig, type } = this.typeGetter(resolve(resolve(this.config.type.name, this), this));
-    return new type(() => (this.session as EditionSession), merge(typeConfig, resolve(this.config.type.config, this)));
+    const { typeConfig, type } = this.typeGetter(this.getConfig('type.name'));
+    return new type(() => (this.session as EditionSession), merge(typeConfig, this.getConfig('type.config')));
   }
 
   buildRenderer() {
-    const { rendererConfig, renderer } = this.rendererGetter(resolve(this.config.renderer.name, this));
-    return new renderer(() => (this.session as EditionSession), merge(rendererConfig, resolve(this.config.renderer.config, this)));
+    const { rendererConfig, renderer } = this.rendererGetter(this.getConfig('renderer.name'));
+    return new renderer(() => (this.session as EditionSession), merge(rendererConfig, this.getConfig('renderer.config')));
   }
 
   private async createSession() {
@@ -118,7 +127,7 @@ class Instance {
     this.config.onLoading(loading, this);
     const loadingContainer = this.domTarget.querySelector(`[${ATTR_LOADING_CONTAINER}]`) as HTMLElement;
     if (loading) {
-      loadingContainer.appendChild(parseTemplate(resolve(this.config.template.loading, this) as string));
+      loadingContainer.appendChild(parseTemplate(this.getConfig('template.loading') as string));
     } else {
       deleteNodeChildren(loadingContainer as HTMLElement);
     }
@@ -126,13 +135,14 @@ class Instance {
   }
 
   private buildFlyterTarget() {
-    const markup = parseTemplate(resolve(this.config.template.read, this));
+    const markup = parseTemplate(this.getConfig('template.read'));
     const element = markup.querySelector(`[${ATTR_READ_CONTAINER}]`) as HTMLElement;
-    const trigger = resolve(this.config.trigger, this);
+    const trigger = this.getConfig('trigger');
     if (trigger !== 'none') {
       const event = trigger === 'click' ? 'click' : 'mouseover';
       element.addEventListener(event, this.listener, true);
     }
+    deleteNodeChildren(this.domTarget);
     this.domTarget.append(markup);
     return element as HTMLElement;
   }

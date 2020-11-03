@@ -1,1 +1,4 @@
-export { default } from './flyter';
+import flyter from '../index';
+
+// @ts-ignore
+window.flyter = flyter;

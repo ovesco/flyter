@@ -5,15 +5,9 @@ import Config, { attrConfigResolver, baseConfig } from "./Config";
 import Instance from './Instance';
 import ManyInstance from './ManyInstance';
 import { RendererConstructor, TypeConstructor, anyConfigObject, DeepPartial, FlyterType, FlyterRenderer } from "./types";
-import Theme from './Theme';
+import Theme, { defaultTheme } from './Theme';
 
 type ThemeProvider = (conf: anyConfigObject) => Theme;
-
-const defaultTheme: Theme = {
-  renderers: {},
-  types: {},
-  config: {},
-};
 
 type ThemeMapData = { order: number, baseThemeConfig: anyConfigObject, theme: ThemeProvider, name: string };
 type TypeMapData = { baseTypeConfig: anyConfigObject, type: TypeConstructor };
@@ -64,12 +58,13 @@ class Flyter {
   }
 
   private buildInstance(target: HTMLElement, config: DeepPartial<Config>) {
-    const attrConfig = attrConfigResolver(target);
-    const themeConfig = (new Merger<Config>([ baseConfig, attrConfig, config ])).buildConfig().themes;
-    const theme = this.resolveThemeConfig(themeConfig);
-
-    console.log(theme);
-    
+    /*
+     Config is resolved by merging: [baseConfig, themeDerivedConfig, attributeConfig, providedConfig].
+     - themeDerivedConfig might depend on attributeConfig, so we have to build it twice
+     */
+    const dirtyAttrConfig = attrConfigResolver(target);
+    const themeConfig = (new Merger<Config>([ baseConfig, dirtyAttrConfig, config ])).buildConfig().themes;
+    const theme = this.resolveThemeConfig(themeConfig);    
     const configMerger = new Merger<Config>([baseConfig]);
     configMerger.pushConfig(theme.config || {});
     configMerger.pushConfig(attrConfigResolver(target));
@@ -92,10 +87,8 @@ class Flyter {
   }
 
   private resolveThemeConfig(themesData: {[ key: string ]: anyConfigObject }): Theme {
-    const givenThemeNames = Object.keys(themesData);
-    const themeNames =  givenThemeNames.length === 0 ? Array.from(this.themes.keys()) : givenThemeNames;
-    const themesToLoad = themeNames.map((name) => this.themes.get(name) as ThemeMapData).sort((a, b) => a.order > b.order ? 1 : -1);
-    const loadedThemes = [defaultTheme, ...themesToLoad.map((it) => it.theme(merge(it.baseThemeConfig, themesData[it.name] || {})))];
+    const themesToLoad = Array.from(this.themes.entries()).map(([ name, data]) => ({ name, data })).sort((a, b) => a.data.order > b.data.order ? 1 : -1);
+    const loadedThemes = [defaultTheme, ...themesToLoad.map(({ name, data }) => data.theme(merge(data.baseThemeConfig, themesData[name] || {})))];
     return new Merger<Theme>(loadedThemes).buildConfig();
   }
 }

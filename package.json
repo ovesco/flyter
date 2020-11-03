@@ -1,6 +1,6 @@
 {
   "name": "flyter",
-  "version": "1.0.1",
+  "version": "0.1.0",
   "description": "An inline editing library",
   "main": "lib/index.js",
   "repository": {
@@ -16,6 +16,7 @@
   "author": "ovesco",
   "license": "Apache-2.0",
   "dependencies": {
+    "@popperjs/core": "^2.5.4",
     "deepmerge": "^4.2.2",
     "dompurify": "^2.2.0"
   },
@@ -23,6 +24,7 @@
     "@types/deepmerge": "^2.2.0",
     "@types/dompurify": "^2.0.4",
     "parallel-webpack": "^2.6.0",
+    "sass": "^1.28.0",
     "shx": "^0.3.3",
     "ts-loader": "^8.0.7",
     "typescript": "^4.0.5",
@@ -33,7 +35,7 @@
     "@popperjs/core": "^2.5.3"
   },
   "scripts": {
-    "start": "parcel index.html",
+    "start": "cd docs && parcel index.html",
     "clean": "shx rm -rf bundles lib lib-esm",
     "build:bundles": "parallel-webpack",
     "build:lib": "tsc && tsc -m es6 --outDir lib-esm",

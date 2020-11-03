@@ -1,0 +1,57 @@
+.container {
+  max-width: 960px;
+}
+
+header {
+  max-height: 600px;
+  height: 100vh;
+  background: linear-gradient(45deg, #665fee, #27c2de);
+
+  h1 {
+    font-size:4em;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  color: rgb(77, 77, 77);
+}
+
+code {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: rgba(238, 133, 133, 0.9);
+  padding: 0 5px;
+}
+
+#header-code {
+  background: rgba(0,0,0,0.3);
+}
+
+.text-white-70 {
+  color: rgba(255,255,255,0.7);
+}
+
+.flyter {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  cursor: pointer;
+}
+
+pre {
+  border-radius: 5px;
+}
+
+.bg-grey {
+  background: #eee;
+  box-shadow: 0 -3px 3px rgba(0,0,0,0.1),
+    0 1px 0px rgba(0,0,0,0.1);
+}
+
+.info {
+  background: #a0c1ec;
+  border-left: 8px solid #7c8be4;
+  color: white;
+  border-radius: 5px;
+  padding: 1em;
+}
