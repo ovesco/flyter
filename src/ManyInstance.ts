@@ -36,7 +36,7 @@ class ManyInstance {
     return this.asyncBatch((it) => it.destroy());
   }
 
-  async asyncBatch(fn: (it: Instance) => any) {
+  private async asyncBatch(fn: (it: Instance) => any) {
     return Promise.all(this.instances.map((it) => fn(it)));
   }
 

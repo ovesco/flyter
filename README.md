@@ -199,8 +199,6 @@ Those configuration options allow you to hook into the instance lifecycle and pe
 |onError|`async (error, instance) => any`|Called when an error is thrown somewhere|`(e) => console.log(e)`|
 |onCancel|`async (instance) => any`|Called when an edition session is canceled|`() => null`|
 |validate|`async (value, instance) => boolean | Error`|Can be used to validate the submitted value, before calling the `onSubmit` callback|`() => true`|
-||``||`() => null`|
-
 
 ### Types
 Flyter ships with 4 types by default which have their own configuration you can override by setting `type.config`.

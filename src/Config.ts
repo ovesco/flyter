@@ -80,11 +80,11 @@ export const baseConfig: Config = {
     resultFormatter: ({}, value: any) => value,
     method: 'POST',
   },
-  onOpen: () => console.log('on open'),
-  onClose: () => console.log('on close'),
-  onLoading: (status) => console.log('on loading', status),
-  onRendererLoading: (status) => console.log('on renderer loading', status),
-  onDestroy: () => console.log('on destroy'),
+  onOpen: () => null,
+  onClose: () => null,
+  onLoading: () => null,
+  onRendererLoading: () => null,
+  onDestroy: () => null,
   onSubmit: async (value, instance) => {
     const resultFormatter = instance.getConfig('server.resultFormatter', true);
     const url = instance.getConfig('server.url');
@@ -99,7 +99,7 @@ export const baseConfig: Config = {
     }
   },
   onError: (err) => console.log('Flyter error', err),
-  onCancel: () => console.log('on cancel'),
+  onCancel: () => null,
   validate: () => true,
   type: {
     name: 'text',

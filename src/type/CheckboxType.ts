@@ -25,7 +25,7 @@ class CheckboxType extends BaseChoiceType<CheckboxConfig, HTMLDivElement> {
 
   getCurrentValue() {
     const values = this.getCheckbox().filter((it) => it.checked).map((it) => it.value);
-    return values.length > 0 ? values : this.getSession().getInstance().getConfig('emptyValue'));
+    return values.length > 0 ? values : this.getSession().getInstance().getConfig('emptyValue');
   }
 
   getReadableValue(value: any | any[]) {

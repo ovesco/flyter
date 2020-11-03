@@ -33,7 +33,7 @@ class SelectType extends BaseChoiceType<SelectConfig, HTMLSelectElement> {
     }
     
     if (!this.config.multiple) return values[0];
-    return values.length > 0 ? values : this.getSession().getInstance().getConfig('emptyValue'));
+    return values.length > 0 ? values : this.getSession().getInstance().getConfig('emptyValue');
   }
 
   getReadableValue(value: any[]) {
