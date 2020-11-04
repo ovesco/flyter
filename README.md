@@ -14,17 +14,17 @@ tons of customization options and can be easily extended to fit your needs.
 ### Including it in your webpage
 You can quickly start working with flyter by using one of the pre-built bundle. It comes in 4 flavor:
 ```html
-<!-- vanilla version, core flyter, renderers and types -->
-<script type="text/javascript" src=".../flyter.vanilla.min.js"></script>
+<!-- vanilla build, core flyter, renderers and types -->
+<script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.vanilla.min.js"></script>
 
 <!-- loaded with bootstrap theme -->
-<script type="text/javascript" src=".../flyter.bootstrap.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.bootstrap.min.js"></script>
 
 <!-- bundled with Popperjs directly -->
-<script type="text/javascript" src=".../flyter.popper.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.popper.min.js"></script>
 
 <!-- bundled with Popperjs and the bootstrap theme -->
-<script type="text/javascript" src=".../flyter.vanilla.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.popper-bootstrap.min.js"></script>
 
 <script type="text/javascript">
 // flyter is now available through window.flyter

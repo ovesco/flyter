@@ -41,6 +41,9 @@
     "build:docs": "parcel build docs/index.html --public-url /flyter/",
     "build:bundles": "parallel-webpack",
     "build:lib": "tsc && tsc -m es6 --outDir lib-esm",
-    "build": "npm run clean && npm run build:bundles && npm run build:lib"
+    "build": "npm run clean && npm run build:bundles && npm run build:lib",
+    "prepare": "npm run build",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   }
 }
