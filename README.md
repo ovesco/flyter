@@ -336,6 +336,7 @@ flyter.attach('div', {
 ## Renderers
 Flyter ships with 2 renderers which you can use out of the box.
 
+
 :boom: Note that some configuration type are marked with *, this means that they can also take an (async) callback which returns an value of the expected type, which takes the renderer as single parameter.
 
 ### Inline renderer

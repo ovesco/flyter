@@ -24,6 +24,7 @@
     "@types/deepmerge": "^2.2.0",
     "@types/dompurify": "^2.0.4",
     "parallel-webpack": "^2.6.0",
+    "parcel-bundler": "^1.12.4",
     "sass": "^1.28.0",
     "shx": "^0.3.3",
     "ts-loader": "^8.0.7",
@@ -35,8 +36,9 @@
     "@popperjs/core": "^2.5.3"
   },
   "scripts": {
-    "start": "cd docs && parcel index.html",
+    "start": "parcel docs/index.html",
     "clean": "shx rm -rf bundles lib lib-esm",
+    "build:docs": "parcel build docs/index.html",
     "build:bundles": "parallel-webpack",
     "build:lib": "tsc && tsc -m es6 --outDir lib-esm",
     "build": "npm run clean && npm run build:bundles && npm run build:lib"

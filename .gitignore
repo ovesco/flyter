@@ -3,6 +3,4 @@ dist
 lib
 lib-esm
 .cache
-docs/dist
-docs/.cache
 bundles
