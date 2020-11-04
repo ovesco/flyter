@@ -51,7 +51,7 @@ class TextType extends FlyterType<Config> {
     const tag = type === 'textarea' ? type : 'input';
     return `
       <${tag} ${this.config.attributes} type="${type}" ${FLYTER_INPUT} class="flyter-text-input ${this.config.class}" />
-    `;
+    `.trim();
   }
 }
 

@@ -48,7 +48,7 @@ class SelectType extends BaseChoiceType<SelectConfig, HTMLSelectElement> {
         ${this.config.showEmptyValue ? `<option value="${EMPTY_VAL}"></option>` : ''}
         ${this.dataSource.map(({ label, value }) => `<option value="${value}">${label}</option>`).join('')}
       </select>
-    `;
+    `.trim();
   }
 }
 

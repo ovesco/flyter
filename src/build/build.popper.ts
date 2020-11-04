@@ -1,5 +1,5 @@
 import { createPopper } from '@popperjs/core';
-import flyter from '../index'
+import flyter from './build.vanilla'
 
 const popperTheme = () => ({
   renderers: {

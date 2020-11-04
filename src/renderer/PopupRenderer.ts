@@ -54,7 +54,7 @@ export const PopupConfig: PopupConfigType = {
   <div class="flyter-popup-loading" ${ATTR_POPUP_LOADING}>Loading</div>
   <div class="flyter-popup-error" ${ATTR_POPUP_ERROR_CONTAINER}></div>
 </div>
-  `,
+  `.trim(),
 }
 
 class PopupRenderer extends FlyterRenderer<PopupConfigType> {

@@ -123,19 +123,19 @@ export const baseConfig: Config = {
         <div ${ATTR_EDIT_CONTAINER}></div>
         <div ${ATTR_ACTION_CONTAINER}></div>
       </div>
-    `,
+    `.trim(),
     buttons: `
       <div class="flyter-buttons-container">
         <button ${ATTR_SUBMIT_BTN}></button>
         <button ${ATTR_CANCEL_BTN}></button>
       </div>
-    `,
+    `.trim(),
     read: `
       <div class="flyter-read-container">
         <span ${ATTR_READ_CONTAINER}></span>
         <div ${ATTR_LOADING_CONTAINER}></div>
       </div>
-    `,
+    `.trim(),
     loading: `<div>Loading</div>`
   }
 };

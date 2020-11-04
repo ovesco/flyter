@@ -1,6 +1,20 @@
-import flyter, { loadBootstrapTheme } from '../src';
+import flyter, {
+  withBootstrapTheme,
+  withPopupRenderer,
+  withInlineRenderer,
+  withTextType,
+  withSelectType,
+  withCheckboxType,
+  withRadioType,
+} from '../src';
 
-loadBootstrapTheme();
+withBootstrapTheme();
+withPopupRenderer();
+withInlineRenderer();
+withTextType();
+withSelectType();
+withCheckboxType();
+withRadioType();
 
 const titleInstance = flyter.attach('#title');
 

@@ -42,7 +42,7 @@ class CheckboxType extends BaseChoiceType<CheckboxConfig, HTMLDivElement> {
             <input type="checkbox" ${ATTR_DISABLABLE} id="${name}-${value}" name="${name}" class="${this.config.checkboxClass}" value="${value}">
             <label class="${this.config.labelClass}" for="${name}-${value}" ${ATTR_DISABLABLE}>${label}</label>
           </div>
-        `).join('')}
+        `.trim()).join('')}
       </div>
     `;
   }

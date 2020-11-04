@@ -1,7 +1,7 @@
 import { ATTR_ACTION_CONTAINER, ATTR_CANCEL_BTN, ATTR_EDIT_CONTAINER, ATTR_SUBMIT_BTN } from "./Config";
 import Instance from "./Instance";
 import { FlyterRenderer, FlyterType } from "./types";
-import { parseTemplate, promisify, resolve } from "./util";
+import { parseTemplate, promisify, escape } from "./util";
 
 class EditionSession {
 
@@ -82,7 +82,7 @@ class EditionSession {
 
   async submit() {
     this.setLoading(true);
-    const value = this.type.getCurrentValue();
+    const value = escape(this.type.getCurrentValue());
     let validationResult: boolean | Error = true;
     try {
       validationResult = await promisify(this.instance.getRawConfig().validate(value, this.instance));

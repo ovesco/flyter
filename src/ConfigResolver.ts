@@ -1,5 +1,5 @@
 import merge from 'deepmerge';
-import { DeepPartial } from '../lib/types';
+import { DeepPartial } from './types';
 import Config from "./Config";
 import Instance from "./Instance";
 import { resolve } from "./util";

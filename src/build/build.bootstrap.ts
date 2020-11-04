@@ -1,6 +1,6 @@
-import flyter, { loadBootstrapTheme } from '../index';
+import flyter, { withBootstrapTheme } from './build.vanilla';
 
-loadBootstrapTheme();
+withBootstrapTheme();
 
 export default flyter;
 

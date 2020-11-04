@@ -13,24 +13,26 @@ import { FlyterRenderer, FlyterType } from './types';
 
 const flyter = new FlyterBuilder();
 
-flyter.registerType('text', TextType, baseTextConfig);
-flyter.registerType('select', SelectType, baseSelectConfig);
-flyter.registerType('checkbox', CheckboxType, baseCheckboxConfig);
-flyter.registerType('radio', RadioType, baseRadioConfig);
-flyter.registerRenderer('popup', PopupRenderer, PopupConfig);
-flyter.registerRenderer('inline', InlineRenderer, InlineConfig);
-
-export default flyter;
-
-const loadBootstrapTheme = () => {
-  flyter.registerTheme('bootstrap', BootstrapTheme, BootstrapThemeBaseConfig);
-};
-
-loadBootstrapTheme();
+const withBootstrapTheme = () => flyter.registerTheme('bootstrap', BootstrapTheme, BootstrapThemeBaseConfig);
+const withPopupRenderer = () => flyter.registerRenderer('popup', PopupRenderer, PopupConfig);
+const withInlineRenderer = () => flyter.registerRenderer('inline', InlineRenderer, InlineConfig);
+const withTextType = () => flyter.registerType('text', TextType, baseTextConfig);
+const withSelectType = () => flyter.registerType('select', SelectType, baseSelectConfig);
+const withCheckboxType = () => flyter.registerType('checkbox', CheckboxType, baseCheckboxConfig);
+const withRadioType = () => flyter.registerType('radio', RadioType, baseRadioConfig);
 
 export {
   FlyterBuilder,
-  loadBootstrapTheme,
   FlyterRenderer,
-  FlyterType
+  FlyterType,
+
+  withBootstrapTheme,
+  withPopupRenderer,
+  withInlineRenderer,
+  withTextType,
+  withSelectType,
+  withCheckboxType,
+  withRadioType,
 }
+
+export default flyter;

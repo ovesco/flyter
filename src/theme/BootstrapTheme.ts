@@ -58,8 +58,8 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
               </div>
               <div class="invalid-feedback d-block" ${ATTR_POPUP_ERROR_CONTAINER}></div>
             </div>
-          </div>`
-          ,
+          </div>
+        `.trim(),
         onInit(renderer: PopupRenderer) {
           const element = renderer.getMarkup() as HTMLElement;
 
@@ -86,7 +86,7 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
       }
     },
     config: {
-      onError(instance) {
+      onError({}, instance) {
         const session = instance.getCurrentSession();
         if (session === null) return;
         const markup = session.getSessionMarkup();
@@ -114,19 +114,19 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
               <div class="flyter-action-container" ${ATTR_ACTION_CONTAINER}></div>
             </div>
           </div>
-        `,
+        `.trim(),
         buttons: `
           <div class="btn-group">
             <button type="button" class="btn btn-${okBtntnTheme} btn-${size} d-flex align-items-center" ${ATTR_SUBMIT_BTN}></button>
             <button type="button" class="btn btn-${cancelBtnTheme} btn-${size}" ${ATTR_CANCEL_BTN}></button>
           </div>
-        `,
+        `.trim(),
         read: `
           <div class="flyter-read-container d-flex align-items-center">
             <span ${ATTR_READ_CONTAINER}></span>
             <span ${ATTR_LOADING_CONTAINER}></span>
           </div>
-        `,
+        `.trim(),
         loading: `
           <div class="ml-2 spinner-border text-${spinnerTheme} spinner-border-${size}"></div>
         `,

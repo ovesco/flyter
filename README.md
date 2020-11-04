@@ -41,14 +41,25 @@ it manually in your webpage (or provide it later as explained below).
 ```
 
 ### Installing it through NPM
-Flyter is also available on NPM.
+Flyter is also available on NPM. The difference with pre-built bundles is that you must manually import
+what you need, this in order to keep your build size as low as possible.
 ```
 npm install -S flyter
 ```
 
 You can then import it in your project.
 ```js
-import flyter from 'flyter';
+import flyter, {
+  withPopupRenderer,
+  withInlineRenderer,
+  withTextType,
+  withSelectType,
+  withCheckboxType,
+  withRadioType,
+} from 'flyter';
+
+withPopupRenderer(); // Load the popup renderer
+withTextType(); // Load the text type
 
 const div = document.getElementById('myDiv');
 flyter.attach(div, { type: { name: 'text' }, /* other config... */ });
@@ -57,9 +68,9 @@ flyter.attach(div, { type: { name: 'text' }, /* other config... */ });
 #### Importing the bootstrap theme
 If you also want to import the bootstrap theme, just run the following
 ```js
-import flyter, { loadBootstrapTheme } from 'flyter';
+import flyter, { withBootstrapTheme } from 'flyter';
 
-loadBootstrapTheme(); // Call this once
+withBootstrapTheme(); // Call this once
 ```
 
 ## Usage
@@ -324,6 +335,7 @@ flyter.attach('div', {
 
 ## Renderers
 Flyter ships with 2 renderers which you can use out of the box.
+
 :boom: Note that some configuration type are marked with *, this means that they can also take an (async) callback which returns an value of the expected type, which takes the renderer as single parameter.
 
 ### Inline renderer

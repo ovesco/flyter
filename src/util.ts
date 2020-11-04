@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify';
+import { sanitize } from 'dompurify';
 
 export const promisify = <T>(val: Promise<T> | T): Promise<T> => Promise.resolve(val);
 
@@ -13,5 +13,7 @@ export const deleteNodeChildren = (node: HTMLElement) => {
 export const parseTemplate = (markup: string | HTMLElement | (() => string)): HTMLElement => {
   if (markup instanceof Element) return markup;
   if (markup instanceof Function) markup = markup();
-  return (new DOMParser()).parseFromString(DOMPurify.sanitize(markup as string), 'text/html').body.firstElementChild as HTMLElement;
+  return (new DOMParser()).parseFromString(sanitize(markup as string), 'text/html').body.firstElementChild as HTMLElement;
 }
+
+export const escape = (str: string) => sanitize(str);

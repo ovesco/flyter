@@ -45,7 +45,7 @@ class RadioType extends BaseChoiceType<RadioConfig, HTMLDivElement> {
         <input type="radio" class="${this.config.radioClass}" ${ATTR_DISABLABLE} name="${name}" id="${name}-${value}" value="${value}">
         <label class="${this.config.labelClass}" ${ATTR_DISABLABLE}  for="${name}-${value}">${label}</label>
       </div>
-    `).join('');
+    `.trim()).join('');
     return `<div class="${this.config.class}">${inputs}</div>`;
   }
 

@@ -1,7 +1,7 @@
 import flyter from './build.popper';
-import { loadBootstrapTheme } from '../index';
+import { withBootstrapTheme } from '../index';
 
-loadBootstrapTheme();
+withBootstrapTheme();
 
 // @ts-ignore
 window.flyter = flyter;
