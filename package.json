@@ -38,7 +38,7 @@
   "scripts": {
     "start": "parcel docs/index.html",
     "clean": "shx rm -rf bundles lib lib-esm",
-    "build:docs": "parcel build docs/index.html",
+    "build:docs": "parcel build docs/index.html --public-url /flyter/",
     "build:bundles": "parallel-webpack",
     "build:lib": "tsc && tsc -m es6 --outDir lib-esm",
     "build": "npm run clean && npm run build:bundles && npm run build:lib"
