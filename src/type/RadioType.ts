@@ -25,7 +25,6 @@ class RadioType extends BaseChoiceType<RadioConfig, HTMLDivElement> {
 
   getCurrentValue() {
     const element = this.getRadios().find((it) => it.checked);
-    console.log(element);
     if (element) {
       return element.value;
     }

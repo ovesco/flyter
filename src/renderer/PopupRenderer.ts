@@ -80,7 +80,6 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   }
 
   async init() {
-    console.log('init');
     this.markup = parseTemplate(await promisify(resolveAsync(this.config.popupTemplate, this)));
     this.transitionDuration = parseInt(await promisify(resolveAsync(this.config.transitionDuration, this)) as any, 10);
     this.closeOnClickOutside = await(promisify(resolveAsync(this.config.closeOnClickOutside, this)));

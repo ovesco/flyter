@@ -90,8 +90,10 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
         const session = instance.getCurrentSession();
         if (session === null) return;
         const markup = session.getSessionMarkup();
-        [...Array.from(markup.querySelectorAll('input')), markup.querySelectorAll('textarea')].forEach((input) => {
-          (input as HTMLElement).classList.add('is-invalid');
+        [...Array.from(markup.querySelectorAll('input')), ...Array.from(markup.querySelectorAll('textarea'))].forEach((input) => {
+          if ((input as HTMLElement).classList) {
+            (input as HTMLElement).classList.add('is-invalid');
+          }
         });
       },
       onRendererLoading(status, instance) {
@@ -100,7 +102,6 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
         const markup = session.getSessionMarkup();
         const loadingMarkup = parseTemplate(`<span class="spinner-border text-white spinner-border-${size} mr-1" role="status" aria-hidden="true"></span>`); 
         const btn = markup.querySelector(`[${ATTR_SUBMIT_BTN}]`);
-        console.log(loadingMarkup);
         if (btn) {
           if (status) btn.insertAdjacentElement('afterbegin', loadingMarkup);
           else btn.removeChild(btn.firstChild as ChildNode);  
