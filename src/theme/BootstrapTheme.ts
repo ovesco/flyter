@@ -7,7 +7,7 @@ import PopupRenderer, {
 } from '../renderer/PopupRenderer';
 import { parseTemplate } from '../util';
 import Theme from '../Theme';
-import { ATTR_ACTION_CONTAINER, ATTR_CANCEL_BTN, ATTR_EDIT_CONTAINER, ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER, ATTR_SUBMIT_BTN } from '../config';
+import { ATTR_ACTION_CONTAINER, ATTR_CANCEL_BTN, ATTR_EDIT_CONTAINER, ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER, ATTR_SUBMIT_BTN } from '../Config';
 
 interface BootstrapThemeConfig {
   size: 'xs' | 'md' | 'lg' | 'xl' | 'sm';
