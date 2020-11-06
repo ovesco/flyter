@@ -3,6 +3,9 @@
 Flyter is a javascript library used to perform inline editing. It is inspired by [x-editable](https://vitalets.github.io/x-editable/), but doesn't rely on jquery, offers
 tons of customization options and can be easily extended to fit your needs.
 
+## Examples
+See Flyter [in action here](https://ovesco.github.io/flyter/)
+
 ## Some cool stuff about it
 - Developed in Typescript
 - Uses DOMPurify under the hood to clean templates and markup
