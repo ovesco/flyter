@@ -113,6 +113,7 @@ The following modifiers are available:
 - `bool` or `boolean` to parse to a boolean value
 - `int` to parse to an integer
 - `float` to parse to a float number
+
 For example `data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'`
 
 Also note that camelCase options can be writen using `_` (refer to previous example).
