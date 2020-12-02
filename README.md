@@ -105,7 +105,18 @@ flyter.attach('.multipleElements', {
 ## Configuration
 Flyter supports many configuration options explained here.
 
-:star: Configuration can also be set through `data-fcnf-` attributes for all non-callback values. Note that for renderer and type configuration, if the expected value is an object or something else, it might throw an error as Flyter won't know that it has to parse it. For config within Flyter, Server and buttons it will work, for example `data-fcnf-server-query_params='{"id": 1}'` will be parsed. Also note that camelCase options can be writen using `_` (refer to previous example).
+:star: Configuration can also be set through `data-fcnf-` attributes for all non-callback values, for example `data-fcnf-type-name="text"` to set the type's name to `text`.
+
+When you deal with values that should be of a specific format, such as json, you can append modifiers to your config attribute with a `:`.
+The following modifiers are available:
+- `json` to parse value to json
+- `bool` or `boolean` to parse to a boolean value
+- `int` to parse to an integer
+- `float` to parse to a float number
+For example `data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'`
+
+Also note that camelCase options can be writen using `_` (refer to previous example).
+
 
 :star2: Note that some configuration options have a type set to `something`*, this * indicates that this option can either
 take a value or a function of the format `(instance) => expected type`.

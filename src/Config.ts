@@ -141,30 +141,14 @@ export const baseConfig: Config = {
 };
 
 export const attrConfigResolver = (element: HTMLElement) => {
-  const keyJsonParsable = [
-    'server.queryParams',
-    'type.config',
-    'renderer.config',
-    'themes',
-  ];
-
-  const keyBooleanParsable = [
-    'okButton.enabled',
-    'cancelButton.enabled'
-  ];
-
-  const keyNumberParsable: string[] = [];
-
   const attrs = Array.from(element.attributes).filter((it) => it.nodeName.startsWith('data-fcnf'));
   const config = {} as anyConfigObject;
-  let correct = true;
 
   attrs.forEach((it) => {
-    const configKey = it.nodeName.replace('data-fcnf-', '').split('-')
-      .map((str) => str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('_', '')));
+    const [key, type] = it.nodeName.replace('data-fcnf-', '').split(':');
+    const configKey = key.split('-').map((str) => str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('_', '')));
 
     let current = config;
-    let fullDotKey = '';
     for (let i = 0; i < configKey.length - 1; i++) {
 
       const keyElement = configKey[i];
@@ -173,25 +157,31 @@ export const attrConfigResolver = (element: HTMLElement) => {
       }
 
       current = current[keyElement];
-      fullDotKey += `${keyElement}.`;
     }
 
     const lastKey = configKey[configKey.length - 1];
-    fullDotKey += lastKey;
 
     let value: any = it.nodeValue;
-    if (keyJsonParsable.includes(fullDotKey)) {
-      value = JSON.parse(value);
-    } else if (keyBooleanParsable.includes(fullDotKey)) {
-      value = ['1', 'true'].includes(value.trim()) ? true : false;
-    } else if (keyNumberParsable.includes(fullDotKey)) {
-      value = parseInt(value, 10);
+    switch (type) {
+      case 'json':
+        value = JSON.parse(value);
+        break;
+      case 'bool':
+      case 'boolean':
+        value = ['1', 'true'].includes(value.trim()) ? true : false;
+        break;
+      case 'int':
+        value = parseInt(value, 10);
+        break;
+      case 'float':
+        value = parseFloat(value);
+        break;
+      default:
+        break;
     }
 
-    if (lastKey) {
-      current[lastKey] = value;
-    }
+    current[lastKey] = value;
   });
 
-  return correct ? config : {};
+  return config;
 };

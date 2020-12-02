@@ -101,3 +101,30 @@ flyter.attach('#async', {
     return new Promise((resolve) => setTimeout(() => resolve(), 900));
   },
 });
+
+flyter.attach('#ex-doc', {
+  initialValue: 10,
+  type: {
+    name: 'text',
+    config: {
+      type: 'number'
+    }
+  },
+  valueFormatter: (val) => `Current value: ${val}`,
+  renderer: {
+    name: 'popup',
+    config: {
+      popperConfig: {
+        placement: 'bottom',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 20],
+            }
+          }
+        ]
+      }
+    }
+  }
+});

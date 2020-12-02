@@ -1,6 +1,6 @@
 {
   "name": "flyter",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "An inline editing library",
   "main": "lib/index.js",
   "repository": {
@@ -18,7 +18,7 @@
   "dependencies": {
     "@popperjs/core": "^2.5.4",
     "deepmerge": "^4.2.2",
-    "dompurify": "^2.2.0"
+    "dompurify": "^2.2.2"
   },
   "devDependencies": {
     "@types/deepmerge": "^2.2.0",
@@ -27,10 +27,10 @@
     "parcel-bundler": "^1.12.4",
     "sass": "^1.28.0",
     "shx": "^0.3.3",
-    "ts-loader": "^8.0.7",
-    "typescript": "^4.0.5",
-    "webpack": "^5.3.2",
-    "webpack-cli": "^4.1.0"
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.9.0",
+    "webpack-cli": "^4.2.0"
   },
   "peerDependencies": {
     "@popperjs/core": "^2.5.3"
