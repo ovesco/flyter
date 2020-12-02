@@ -18,15 +18,19 @@ See Flyter [in action here](https://ovesco.github.io/flyter/)
 You can quickly start working with flyter by using one of the pre-built bundle. It comes in 4 flavor:
 ```html
 <!-- vanilla build, core flyter, renderers and types -->
+<!-- 68 Ko minified, 15,7 Ko gzipped -->
 <script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.vanilla.min.js"></script>
 
 <!-- loaded with bootstrap theme -->
+<!-- 69 Ko minified, 15,8 Ko gzipped -->
 <script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.bootstrap.min.js"></script>
 
 <!-- bundled with Popperjs directly -->
+<!-- 87 Ko minified, 22,1 Ko gzipped -->
 <script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.popper.min.js"></script>
 
 <!-- bundled with Popperjs and the bootstrap theme -->
+<!-- 88 Ko minified, 22,1 Ko gzipped -->
 <script type="text/javascript" src="https://unpkg.com/flyter/bundles/flyter.popper-bootstrap.min.js"></script>
 
 <script type="text/javascript">
