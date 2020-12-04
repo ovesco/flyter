@@ -20,6 +20,8 @@ export {
 export default interface Config {
   themes: anyConfigObject;
   trigger: 'click' | 'hover' | 'none' | ((instance: Instance) => 'click' | 'hover' | 'none');
+  submitOnEnter: boolean | ((instance: Instance) => boolean);
+  triggerOnTarget: boolean | ((instance: Instance) => boolean);
   emptyValue: any | ((instance: Instance) => any);
   initialValue: any | ((instance: Instance) => any);
   emptyValueDisplay: string | ((instance: Instance) => string);
@@ -66,14 +68,12 @@ export default interface Config {
 export const baseConfig: Config = {
   themes: {},
   trigger: 'click',
+  submitOnEnter: false,
+  triggerOnTarget: false,
   emptyValue: null,
   initialValue: null,
   emptyValueDisplay: 'Empty',
-  valueFormatter: async (val, instance) => {
-    const type = instance.buildType();
-    await type.init();
-    return type.getReadableValue(val);
-  },
+  valueFormatter: async (val, instance) => instance.buildStandardReadableValue(val),
   server: {
     url: null,
     queryParams: {},

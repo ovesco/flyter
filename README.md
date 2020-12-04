@@ -131,7 +131,9 @@ take a value or a function of the format `(instance) => expected type`.
 |---|---|---|---|
 |themes|`object`|If you want to configure your themes, explained in the theme section|`{}`|
 |trigger|`string`|Flyter instance trigger, can be either `click`, `hover` or `none`|`'click'`|
+|triggerOnTarget|`boolean`*|Wether the trigger will be attached to the given target element, or on the appended custom flyter element. By default trigger listener is attached to custom flyter element|`false`|
 |emptyValue|`any`*|the empty value, which indicates to flyter that this instance has no value yet|`null`|
+|submitOnEnter|`boolean`*|If true, will submit the current edition session if the user hits enter. Pay attention if, for example, type is a textarea, it can submit when not expected|`false`|
 |initialValue|`any`*|The instance's initialization value|`null`|
 |emptyValueDisplay|`string`*|What should be displayed when the instance has no value|`'Empty'`|
 

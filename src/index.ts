@@ -1,6 +1,8 @@
 import FlyterBuilder from './Flyter';
 
 import BootstrapTheme, { BootstrapThemeBaseConfig } from './theme/BootstrapTheme';
+import Instance from './Instance';
+import ManyInstance from './ManyInstance';
 
 import PopupRenderer, { PopupConfig } from './renderer/PopupRenderer';
 import InlineRenderer, { InlineConfig } from './renderer/InlineRenderer';
@@ -25,6 +27,9 @@ export {
   FlyterBuilder,
   FlyterRenderer,
   FlyterType,
+
+  Instance,
+  ManyInstance,
 
   withBootstrapTheme,
   withPopupRenderer,

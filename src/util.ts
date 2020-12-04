@@ -16,4 +16,6 @@ export const parseTemplate = (markup: string | HTMLElement | (() => string)): HT
   return (new DOMParser()).parseFromString(sanitize(markup as string), 'text/html').body.firstElementChild as HTMLElement;
 }
 
-export const escape = (str: string) => sanitize(str);
+export const escape = (str: any) => {
+  return typeof str === "string" ? sanitize(str) : str;
+};

@@ -6,6 +6,7 @@ import flyter, {
   withSelectType,
   withCheckboxType,
   withRadioType,
+  Instance,
 } from '../src';
 
 withBootstrapTheme();
@@ -103,24 +104,38 @@ flyter.attach('#async', {
 });
 
 flyter.attach('#ex-doc', {
-  initialValue: 10,
+  initialValue: ['1'],
+  emptyValueDisplay: "I'm not feeling anything today",
   type: {
-    name: 'text',
+    name: 'checkbox',
     config: {
-      type: 'number'
+      dataSource: [
+        { label: '😊', value: '1' },
+        { label: '❤️', value: '2' },
+        { label: '🔥', value: '3' },
+        { label: '🍺', value: '4' },
+      ],
     }
   },
-  valueFormatter: (val) => `Current value: ${val}`,
+  valueFormatter: async (val, instance) => {
+    // Here we ask the current instance to build the value which
+    // would have been displayed if we didn't overload valueFormatter.
+    // It uses the type to build a readable value, uses the one from
+    // the current editing session if any or builds one on the fly otherwise
+    const readableValue = await instance.buildStandardReadableValue(val);
+    return `Today I'm feeling ${readableValue}`;
+  }
+});
+
+flyter.attach('.flyter-btn', {
   renderer: {
-    name: 'popup',
     config: {
       popperConfig: {
-        placement: 'bottom',
         modifiers: [
           {
             name: 'offset',
             options: {
-              offset: [0, 20],
+              offset: [0, 70], // offset to match bootstrap button
             }
           }
         ]

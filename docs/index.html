@@ -19,6 +19,7 @@
         <h2 class="text-center text-white-70">A Javascript library for inline editing</h2>
         <h4 class="text-center text-white-50">inspired by x-editable but coded in Typescript without jquery, extendable and highly customizable.</h4>
         <pre class="language-javascript mt-3" id="header-code"><code class="language-javascript">flyter.attach('.ftr', 'text');</code></pre>
+        <a href="https://github.com/ovesco/flyter" class="btn btn-light">Github & Documentation</a>
       </div>
     </header>
 
@@ -54,32 +55,28 @@
 
       <h3>Examples</h3>
       <h5>Configuring through javascript object</h5>
-      <p>Note that flyter can be attached to any element.</p>
-      <button class="btn btn-primary" id="ex-doc">Edit me</button>
+      <div class="flyter" id="ex-doc"></div>
       <pre class="language-javascript mt-3"><code class="language-javascript">flyter.attach('#ex-doc', {
-  initialValue: 10,
+  initialValue: ['1'],
+  emptyValueDisplay: "I'm not feeling anything today",
   type: {
-    name: 'text',
+    name: 'checkbox',
     config: {
-      type: 'number'
+      dataSource: [
+        { label: '😊', value: '1' },
+        { label: '❤️', value: '2' },
+        { label: '🔥', value: '3' },
+        { label: '🍺', value: '4' },
+      ],
     }
   },
-  valueFormatter: (val) => `Current value: ${val}`,
-  renderer: {
-    name: 'popup',
-    config: {
-      popperConfig: { // This config objet is directly passed to popper on initialization
-        placement: 'bottom',
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset: [0, 20], // offset to match bootstrap button
-            }
-          }
-        ]
-      }
-    }
+  valueFormatter: async (val, instance) => {
+    // Here we ask the current instance to build the value which
+    // would have been displayed if we didn't overload valueFormatter.
+    // It uses the type to build a readable value, uses the one from
+    // the current editing session if any or builds one on the fly otherwise
+    const readableValue = await instance.buildStandardReadableValue(val);
+    return `Today I'm feeling ${readableValue}`;
   }
 });</code></pre>
 
@@ -95,19 +92,48 @@
         </ul>
         For example: <code>data-fcnf-renderer-config-popper_config:<b>json</b>='{"placement":"bottom"}'</code>
       </p>
-      <button class="btn btn-primary flyter-attr" data-fcnf-initial_value="Edit me">Edit me</button>
-      <button class="btn btn-primary flyter-attr"
+      <div class="flyter flyter-attr" data-fcnf-initial_value="Edit me">Edit me</div>
+      <div class="flyter flyter-attr"
         data-fcnf-initial_value="Edit me too!"
         data-fcnf-type-name="text"
         data-fcnf-type-config-type="textarea"
-        data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'>Edit me too!</button>
-        <pre class="language-javascript mt-3"><code class="language-javascript">&lt;button class="btn btn-primary flyter-attr" data-fcnf-initial_value="Edit me">Edit me&lt;/button>
+        data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'>Edit me too!</div>
+        <pre class="language-javascript mt-3"><code class="language-javascript">&lt;div class="flyter-attr" data-fcnf-initial_value="Edit me">Edit me&lt;/div>
 
-&lt;button class="btn btn-primary flyter-attr"
+&lt;div class="flyter-attr"
   data-fcnf-type-name="text"
   data-fcnf-type-config-type="textarea"
   data-fcnf-initial_value="Edit me too!"
-  data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'>Edit me&lt;/button></code></pre>        
+  data-fcnf-renderer-config-popper_config:json='{"placement":"bottom"}'>Edit me&lt;/div></code></pre>
+
+      <h5 class="pt-5">Attaching to buttons (or something else)</h5>
+      <p>
+        Flyter can be attached to any kind of element. It will append new children to it to work. This might cause problem, for example with buttons when triggering it,
+        as the triggered element will not be the button but the <code>span</code> which flyter has appended to it. To handle it you can use the <code>triggerOnTarget</code> option.
+      </p>
+      <button class="btn btn-primary flyter-btn" data-fcnf-initial_value="Try clicking this button but not on the text" style="padding:50px 70px">Try clicking this button but not on the text</button>
+      <button class="btn btn-primary flyter-btn" data-fcnf-initial_value="This one will work" data-fcnf-trigger_on_target:bool="true" style="padding:50px 70px">This one will work</button>
+      <pre class="language-javascript mt-3"><code class="language-javascript">flyter.attach('.flyter-btn', {
+  triggerOnTarget: true, // will attach trigger to the target given during initialization
+  renderer: {
+    config: {
+      popperConfig: {
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [50, 70], // offset to match this big bootstrap button
+            }
+          }
+        ]
+      }
+    }
+  }
+});</code></pre>
+
+      <hr />
+      <h2>License</h2>
+      <h4>Apache 2.0 License</h4>
     </div>
 
     <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2"></script>

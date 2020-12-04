@@ -18,11 +18,14 @@ class Instance {
 
   private listener: (e: MouseEvent) => void;
 
+  private keyListener: ((e: KeyboardEvent) => void)  | null = null;
+
   private configResolver: ConfigResolver;
 
   constructor(private domTarget: HTMLElement, private config: Config, private typeGetter: (name: string) => typeData, private rendererGetter: (name: string) => rendererData) {
     this.configResolver = new ConfigResolver(config, this);
     this.value = resolve(config.initialValue, this);
+    this.attachKeyEvent();
     this.listener = () => this.open();
     this.flyterElement = this.buildFlyterTarget();
     this.refresh();
@@ -93,12 +96,31 @@ class Instance {
     }
   }
 
+  async buildStandardReadableValue(val: any | null) {
+    if (!val) val = this.getValue();
+    const session = this.getCurrentSession();
+    if (session !== null) {
+      return session.getType().getReadableValue(val);
+    } else {
+      const type = this.buildType();
+      await type.init();
+      return type.getReadableValue(val);
+    }
+  }
+
   deleteSession() {
     if (this.session === null) return;
     this.session = null;
   }
 
   async destroy() {
+    const trigger = this.getConfig('trigger');
+    if (this.getConfig('triggerOnTarget') === true && trigger !== 'none') {
+      this.getDomTarget().removeEventListener(trigger, this.listener, true);
+    }
+    if (this.keyListener !== null) {
+      window.removeEventListener('keyup', this.keyListener);
+    }
     await promisify(this.config.onDestroy(this));
     deleteNodeChildren(this.domTarget);
   }
@@ -111,6 +133,16 @@ class Instance {
   buildRenderer() {
     const { rendererConfig, renderer } = this.rendererGetter(this.getConfig('renderer.name'));
     return new renderer(() => (this.session as EditionSession), merge(rendererConfig, this.getConfig('renderer.config')));
+  }
+
+  private attachKeyEvent() {
+    if (this.getConfig('submitOnEnter') === true) {
+      this.keyListener = (event: KeyboardEvent) => {
+        const session = this.getCurrentSession();
+        if (session && event.code === 'Enter') session.submit();
+      };
+      window.addEventListener('keyup', this.keyListener);
+    }
   }
 
   private async createSession() {
@@ -140,7 +172,11 @@ class Instance {
     const trigger = this.getConfig('trigger');
     if (trigger !== 'none') {
       const event = trigger === 'click' ? 'click' : 'mouseover';
-      element.addEventListener(event, this.listener, true);
+      if (this.getConfig('triggerOnTarget') === true) {
+        this.getDomTarget().addEventListener(event, this.listener, true);
+      } else {
+        element.addEventListener(event, this.listener, true);
+      }
     }
     deleteNodeChildren(this.domTarget);
     this.domTarget.append(markup);
