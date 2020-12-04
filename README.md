@@ -13,6 +13,37 @@ See Flyter [in action here](https://ovesco.github.io/flyter/)
 - Ships with two renderers (popup and inline) as well as four types (text, select, checkbox and radio) to start quickly
 - A bootstrap 4 theme is available if you use the well-known framework
 
+## Content of this file
+- [Installation](#installation)
+  - [Including it in your webpage](#including-it-in-your-webpage)
+  - [Installing it through NPM](#installing-it-through-npm)
+    - [Importing the bootstrap theme](#importing-the-bootstrap-theme)
+- [Usage](#usage)
+- [Configuration](#configuration)
+  - [Flyter configuration](#flyter-configuration)
+    - [Server handler](#server-handler)
+    - [Type and renderer](#type-and-renderer)
+    - [Buttons and actions](#buttons-and-actions)
+    - [Templates](#templates)
+    - [Callbacks and hooks](#callbacks-and-hooks)
+- [Types](#types)
+  - [TextType](#texttype)
+  - [SelectType](#selecttype)
+  - [CheckboxType](#checkboxtype)
+  - [RadioType](#radiotype)
+  - [Creating your own type](#creating-your-own-type)
+- [Renderers](#renderers)
+  - [Inline renderer](#inline-renderer)
+  - [Popup renderer](#popup-renderer)
+  - [Creating your own renderer](#creating-your-own-renderer)
+- [Global configuration using Themes](#global-configuration-using-themes)
+  - [Overriding theme config](#overriding-theme-config)
+- [API](#api)
+  - [Instance](#instance)
+  - [Edition Session](#edition-session)
+  - [Initializing multiple elements at once](#initializing-multiple-elements-at-once)
+- [License](#license)
+
 ## Installation
 ### Including it in your webpage
 You can quickly start working with flyter by using one of the pre-built bundle. It comes in 4 flavor:
@@ -232,7 +263,7 @@ Those configuration options allow you to hook into the instance lifecycle and pe
 |onCancel|`async (instance) => any`|Called when an edition session is canceled|`() => null`|
 |validate|`async (value, instance) => boolean | Error`|Can be used to validate the submitted value, before calling the `onSubmit` callback|`() => true`|
 
-### Types
+## Types
 Flyter ships with 4 types by default which have their own configuration you can override by setting `type.config`.
 
 ### TextType
