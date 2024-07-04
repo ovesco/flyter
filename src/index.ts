@@ -1,36 +1,74 @@
-import FlyterBuilder from './Flyter';
+import FlyterBuilder from "./Flyter";
 
-import BootstrapTheme, { BootstrapThemeBaseConfig } from './theme/BootstrapTheme';
-import Instance from './Instance';
-import ManyInstance from './ManyInstance';
+import BootstrapTheme, {
+  BootstrapThemeBaseConfig,
+  type BootstrapThemeConfig,
+} from "./theme/BootstrapTheme";
+import Instance from "./Instance";
+import ManyInstance from "./ManyInstance";
+import { parseTemplate } from "./util";
 
-import PopupRenderer, { PopupConfig } from './renderer/PopupRenderer';
-import InlineRenderer, { InlineConfig } from './renderer/InlineRenderer';
-import TextType, { baseTextConfig } from './type/TextType';
-import SelectType, { baseSelectConfig } from './type/SelectType';
-import RadioType, { baseRadioConfig } from './type/RadioType';
-import CheckboxType, { baseCheckboxConfig } from './type/CheckboxType';
+import PopupRenderer, {
+  PopupConfig,
+  type PopupConfigType,
+} from "./renderer/PopupRenderer";
+import InlineRenderer, {
+  InlineConfig,
+  type InlineConfigType,
+} from "./renderer/InlineRenderer";
+import TextType, { baseTextConfig, type TextTypeConfig } from "./type/TextType";
+import SelectType, {
+  baseSelectConfig,
+  type SelectTypeConfig,
+} from "./type/SelectType";
+import RadioType, {
+  baseRadioConfig,
+  type RadioTypeConfig,
+} from "./type/RadioType";
+import CheckboxType, {
+  baseCheckboxConfig,
+  type CheckboxTypeConfig,
+} from "./type/CheckboxType";
+import type Theme from "./Theme";
 
-import { FlyterRenderer, FlyterType } from './types';
+import { DeepPartial, FlyterRenderer, FlyterType } from "./types";
+import deepmerge from "deepmerge";
 
 const flyter = new FlyterBuilder();
 
-const withBootstrapTheme = () => flyter.registerTheme('bootstrap', BootstrapTheme, BootstrapThemeBaseConfig);
-const withPopupRenderer = () => flyter.registerRenderer('popup', PopupRenderer, PopupConfig);
-const withInlineRenderer = () => flyter.registerRenderer('inline', InlineRenderer, InlineConfig);
-const withTextType = () => flyter.registerType('text', TextType, baseTextConfig);
-const withSelectType = () => flyter.registerType('select', SelectType, baseSelectConfig);
-const withCheckboxType = () => flyter.registerType('checkbox', CheckboxType, baseCheckboxConfig);
-const withRadioType = () => flyter.registerType('radio', RadioType, baseRadioConfig);
+const withBootstrapTheme = (config: DeepPartial<BootstrapThemeConfig> = {}) =>
+  flyter.registerTheme(
+    "bootstrap",
+    BootstrapTheme,
+    deepmerge(BootstrapThemeBaseConfig, config || {})
+  );
+const withPopupRenderer = (config: DeepPartial<PopupConfigType> = {}) =>
+  flyter.registerRenderer(
+    "popup",
+    PopupRenderer,
+    deepmerge(PopupConfig, config)
+  );
+const withInlineRenderer = (config: DeepPartial<InlineConfigType> = {}) =>
+  flyter.registerRenderer(
+    "inline",
+    InlineRenderer,
+    deepmerge(InlineConfig, config)
+  );
+const withTextType = () =>
+  flyter.registerType("text", TextType, baseTextConfig);
+const withSelectType = () =>
+  flyter.registerType("select", SelectType, baseSelectConfig);
+const withCheckboxType = () =>
+  flyter.registerType("checkbox", CheckboxType, baseCheckboxConfig);
+const withRadioType = () =>
+  flyter.registerType("radio", RadioType, baseRadioConfig);
 
 export {
   FlyterBuilder,
   FlyterRenderer,
   FlyterType,
-
   Instance,
   ManyInstance,
-
   withBootstrapTheme,
   withPopupRenderer,
   withInlineRenderer,
@@ -38,6 +76,18 @@ export {
   withSelectType,
   withCheckboxType,
   withRadioType,
-}
+  PopupRenderer,
+  InlineRenderer,
+  parseTemplate,
+  Theme,
+  TextType,
+  TextTypeConfig,
+  RadioType,
+  RadioTypeConfig,
+  CheckboxType,
+  CheckboxTypeConfig,
+  SelectType,
+  SelectTypeConfig,
+};
 
 export default flyter;

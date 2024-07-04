@@ -1,5 +1,5 @@
-import Config from './Config';
-import { anyConfigObject, DeepPartial } from './types';
+import Config from "./Config";
+import { anyConfigObject, DeepPartial } from "./types";
 
 type Theme = {
   renderers?: { [rendererName: string]: anyConfigObject };

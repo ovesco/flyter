@@ -1,17 +1,19 @@
 import { FlyterType } from "../types";
 import { parseTemplate, promisify, resolveAsync } from "../util";
 
-export type DataSource = Array<{ value: any, label: string }>;
+export type DataSource = Array<{ value: any; label: string }>;
 
-export const ATTR_DISABLABLE = 'data-flyter-disablable';
+export const ATTR_DISABLABLE = "data-flyter-disablable";
 
 export interface BaseChoiceConfig {
   dataSource: DataSource | (() => DataSource) | (() => Promise<DataSource>);
   class: string;
-};
+}
 
-abstract class BaseChoiceType<T extends BaseChoiceConfig, U extends HTMLElement> extends FlyterType<T> {
-
+abstract class BaseChoiceType<
+  T extends BaseChoiceConfig,
+  U extends HTMLElement
+> extends FlyterType<T> {
   protected dataSource: DataSource;
 
   protected markup: U;
@@ -27,11 +29,12 @@ abstract class BaseChoiceType<T extends BaseChoiceConfig, U extends HTMLElement>
   }
 
   disable(status: boolean) {
-    this.markup.querySelectorAll(`[${ATTR_DISABLABLE}]`).forEach((it) => (it as HTMLInputElement).disabled = status);
+    this.markup
+      .querySelectorAll(`[${ATTR_DISABLABLE}]`)
+      .forEach((it) => ((it as HTMLInputElement).disabled = status));
   }
 
-  onDestroy() {
-  }
+  onDestroy() {}
 
   abstract setValue(value: any): any;
 

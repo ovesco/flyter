@@ -1,7 +1,6 @@
 src
 .cache
-tsconfig.json
+.parcel-cache
+.github
 node_modules
-webpack.config.js
 docs
-dist

@@ -4,13 +4,20 @@ import PopupRenderer, {
   ATTR_POPUP_CONTAINER,
   ATTR_POPUP_ERROR_CONTAINER,
   ATTR_POPUP_LOADING,
-} from '../renderer/PopupRenderer';
-import { parseTemplate } from '../util';
-import Theme from '../Theme';
-import { ATTR_ACTION_CONTAINER, ATTR_CANCEL_BTN, ATTR_EDIT_CONTAINER, ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER, ATTR_SUBMIT_BTN } from '../Config';
+} from "../renderer/PopupRenderer";
+import { parseTemplate } from "../util";
+import type Theme from "../Theme";
+import {
+  ATTR_ACTION_CONTAINER,
+  ATTR_CANCEL_BTN,
+  ATTR_EDIT_CONTAINER,
+  ATTR_LOADING_CONTAINER,
+  ATTR_READ_CONTAINER,
+  ATTR_SUBMIT_BTN,
+} from "../Config";
 
-interface BootstrapThemeConfig {
-  size: 'xs' | 'md' | 'lg' | 'xl' | 'sm';
+export interface BootstrapThemeConfig {
+  size: "xs" | "md" | "lg" | "xl" | "sm";
   okBtntnTheme: string;
   cancelBtnTheme: string;
   spinnerTheme: string;
@@ -18,36 +25,44 @@ interface BootstrapThemeConfig {
 }
 
 export const BootstrapThemeBaseConfig: BootstrapThemeConfig = {
-  size: 'sm',
-  okBtntnTheme: 'primary',
-  cancelBtnTheme: 'light',
-  spinnerTheme: 'primary',
+  size: "sm",
+  okBtntnTheme: "primary",
+  cancelBtnTheme: "light",
+  spinnerTheme: "primary",
   inline: false,
 };
 
-export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: BootstrapThemeConfig): Theme => {
+export default ({
+  size,
+  okBtntnTheme,
+  cancelBtnTheme,
+  spinnerTheme,
+  inline,
+}: BootstrapThemeConfig): Theme => {
   return {
     types: {
       text: {
-        class: `form-control form-control-${size}`
+        class: `form-control form-control-${size}`,
       },
       select: {
-        class: `form-control form-control-${size}`
+        class: `form-control form-control-${size}`,
       },
       checkbox: {
-        inputContainerClass: `form-check ${inline ? 'form-check-inline' : ''}`,
-        checkboxClass: 'form-check-input',
-        labelClass: 'form-check-label'
+        inputContainerClass: `form-check ${inline ? "form-check-inline" : ""}`,
+        checkboxClass: "form-check-input",
+        labelClass: "form-check-label",
       },
       radio: {
-        inputContainerClass: `pl-0 form-check ${inline ? 'form-check-inline' : ''}`,
-        checkboxClass: 'form-check-input',
-        labelClass: 'form-check-label'
-      }
+        inputContainerClass: `pl-0 form-check ${
+          inline ? "form-check-inline" : ""
+        }`,
+        checkboxClass: "form-check-input",
+        labelClass: "form-check-label",
+      },
     },
     renderers: {
       popup: {
-        popupTemplate:  `
+        popupTemplate: `
           <div class="popover show bs-popover-top ">
             <div class="arrow" ${ATTR_POPUP_ARROW}></div>
             <h3 class="popover-header" ${ATTR_POPUP_TITLE}></h3>
@@ -65,14 +80,17 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
 
           const updatePlacement = (placement: string) => {
             element.className = `popover show bs-popover-${placement}`;
-            element.setAttribute('x-placement', placement);
+            element.setAttribute("x-placement", placement);
           };
 
           const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-              if (mutation.type === 'attributes') {
-                const placement = element.getAttribute('data-popper-placement');
-                if (element.getAttribute('x-placement') !== placement && placement !== null) {
+              if (mutation.type === "attributes") {
+                const placement = element.getAttribute("data-popper-placement");
+                if (
+                  element.getAttribute("x-placement") !== placement &&
+                  placement !== null
+                ) {
                   updatePlacement(placement);
                 }
               }
@@ -83,16 +101,19 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
           const instance = renderer.getPopperInstance();
           if (instance !== null) updatePlacement(instance.state.placement);
         },
-      }
+      },
     },
     config: {
       onError({}, instance) {
         const session = instance.getCurrentSession();
         if (session === null) return;
         const markup = session.getSessionMarkup();
-        [...Array.from(markup.querySelectorAll('input')), ...Array.from(markup.querySelectorAll('textarea'))].forEach((input) => {
+        [
+          ...Array.from(markup.querySelectorAll("input")),
+          ...Array.from(markup.querySelectorAll("textarea")),
+        ].forEach((input) => {
           if ((input as HTMLElement).classList) {
-            (input as HTMLElement).classList.add('is-invalid');
+            (input as HTMLElement).classList.add("is-invalid");
           }
         });
       },
@@ -100,11 +121,13 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
         const session = instance.getCurrentSession();
         if (session === null) return;
         const markup = session.getSessionMarkup();
-        const loadingMarkup = parseTemplate(`<span class="spinner-border text-white spinner-border-${size} mr-1" role="status" aria-hidden="true"></span>`); 
+        const loadingMarkup = parseTemplate(
+          `<span class="spinner-border text-white spinner-border-${size} mr-1" role="status" aria-hidden="true"></span>`
+        );
         const btn = markup.querySelector(`[${ATTR_SUBMIT_BTN}]`);
         if (btn) {
-          if (status) btn.insertAdjacentElement('afterbegin', loadingMarkup);
-          else btn.removeChild(btn.firstChild as ChildNode);  
+          if (status) btn.insertAdjacentElement("afterbegin", loadingMarkup);
+          else btn.removeChild(btn.firstChild as ChildNode);
         }
       },
       template: {
@@ -132,6 +155,6 @@ export default ({ size, okBtntnTheme, cancelBtnTheme, spinnerTheme, inline }: Bo
           <div class="ml-2 spinner-border text-${spinnerTheme} spinner-border-${size}"></div>
         `,
       },
-    }
+    },
   };
 };

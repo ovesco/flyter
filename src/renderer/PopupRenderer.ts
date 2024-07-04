@@ -1,12 +1,20 @@
-import { Instance as PopperInstance } from '@popperjs/core';
-import merge from 'deepmerge';
+import { type Instance as PopperInstance, createPopper } from "@popperjs/core";
+import merge from "deepmerge";
 
-import { FlyterRenderer, anyConfigObject } from "../types";
-import { promisify, parseTemplate, deleteNodeChildren, resolveAsync } from '../util';
+import { FlyterRenderer, type anyConfigObject } from "../types";
+import {
+  promisify,
+  parseTemplate,
+  deleteNodeChildren,
+  resolveAsync,
+} from "../util";
 
-type valOrAsync<T> = T | ((renderer: PopupRenderer) => T) | ((renderer: PopupRenderer) => Promise<T>);
+type valOrAsync<T> =
+  | T
+  | ((renderer: PopupRenderer) => T)
+  | ((renderer: PopupRenderer) => Promise<T>);
 
-type PopupConfigType = {
+export type PopupConfigType = {
   popper: (...args: any[]) => PopperInstance | PopperInstance;
   popperConfig: valOrAsync<{ placement: string | anyConfigObject }>;
   transitionDuration: valOrAsync<number>;
@@ -14,16 +22,22 @@ type PopupConfigType = {
   closeOnClickOutside: valOrAsync<boolean>;
   popupTemplate: valOrAsync<string>;
   popupClass: valOrAsync<string>;
-  onInit: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
-  onShow: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
-  onHide: ((renderer: PopupRenderer) => any) | ((renderer: PopupRenderer) => Promise<any>);
+  onInit:
+    | ((renderer: PopupRenderer) => any)
+    | ((renderer: PopupRenderer) => Promise<any>);
+  onShow:
+    | ((renderer: PopupRenderer) => any)
+    | ((renderer: PopupRenderer) => Promise<any>);
+  onHide:
+    | ((renderer: PopupRenderer) => any)
+    | ((renderer: PopupRenderer) => Promise<any>);
 };
 
-const ATTR_POPUP_ARROW = 'data-flyter-popup-arrow';
-const ATTR_POPUP_TITLE = 'data-flyter-popup-title';
-const ATTR_POPUP_CONTAINER = 'data-flyter-popup-container';
-const ATTR_POPUP_ERROR_CONTAINER = 'data-flyter-popup-error';
-const ATTR_POPUP_LOADING = 'data-flyter-popup-loading';
+const ATTR_POPUP_ARROW = "data-flyter-popup-arrow";
+const ATTR_POPUP_TITLE = "data-flyter-popup-title";
+const ATTR_POPUP_CONTAINER = "data-flyter-popup-container";
+const ATTR_POPUP_ERROR_CONTAINER = "data-flyter-popup-error";
+const ATTR_POPUP_LOADING = "data-flyter-popup-loading";
 
 export {
   ATTR_POPUP_ARROW,
@@ -31,21 +45,25 @@ export {
   ATTR_POPUP_CONTAINER,
   ATTR_POPUP_ERROR_CONTAINER,
   ATTR_POPUP_LOADING,
-}
+};
 
 export const PopupConfig: PopupConfigType = {
   popperConfig: {
-    placement: 'top',
+    placement: "top",
   },
   onInit: () => null,
   onShow: () => null,
   onHide: () => null,
-  // @ts-ignore
-  popper: window !== undefined && window.Popper ? window.Popper.createPopper : null,
+  popper:
+    // @ts-ignore
+    window !== undefined && window.Popper
+      ? // @ts-ignore
+        window.Popper.createPopper
+      : createPopper,
   transitionDuration: 300,
   title: null,
   closeOnClickOutside: true,
-  popupClass: '',
+  popupClass: "",
   popupTemplate: `
 <div class="flyter-popup">
   <div class="flyter-popup-arrow" ${ATTR_POPUP_ARROW}></div>
@@ -55,10 +73,9 @@ export const PopupConfig: PopupConfigType = {
   <div class="flyter-popup-error" ${ATTR_POPUP_ERROR_CONTAINER}></div>
 </div>
   `.trim(),
-}
+};
 
 class PopupRenderer extends FlyterRenderer<PopupConfigType> {
-
   private loading: boolean = false;
 
   private markup: HTMLElement | null = null;
@@ -80,15 +97,26 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   }
 
   async init() {
-    this.markup = parseTemplate(await promisify(resolveAsync(this.config.popupTemplate, this)));
-    this.transitionDuration = parseInt(await promisify(resolveAsync(this.config.transitionDuration, this)) as any, 10);
-    this.closeOnClickOutside = await(promisify(resolveAsync(this.config.closeOnClickOutside, this)));
-    const popupClass = await promisify(resolveAsync(this.config.popupClass, this));
-    if (popupClass.trim() !== '' && popupClass !== null) {
+    this.markup = parseTemplate(
+      await promisify(resolveAsync(this.config.popupTemplate, this))
+    );
+    this.transitionDuration = parseInt(
+      (await promisify(
+        resolveAsync(this.config.transitionDuration, this)
+      )) as any,
+      10
+    );
+    this.closeOnClickOutside = await promisify(
+      resolveAsync(this.config.closeOnClickOutside, this)
+    );
+    const popupClass = await promisify(
+      resolveAsync(this.config.popupClass, this)
+    );
+    if (popupClass.trim() !== "" && popupClass !== null) {
       this.markup.classList.add(popupClass);
     }
 
-    this.markup.style.opacity = '0';
+    this.markup.style.opacity = "0";
     this.markup.style.transition = `opacity ${this.transitionDuration / 1000}s`;
 
     this.listener = (e: MouseEvent) => {
@@ -96,7 +124,12 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
       if (this.markup === null) return;
       if (this.markup.contains(e.target as Node)) return;
 
-      if (this.getSession().getInstance().getDomTarget().contains(e.target as Node)) {
+      if (
+        this.getSession()
+          .getInstance()
+          .getDomTarget()
+          .contains(e.target as Node)
+      ) {
         e.stopPropagation();
         e.preventDefault();
       }
@@ -104,27 +137,35 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     };
 
     if (this.closeOnClickOutside) {
-      document.addEventListener('click', this.listener, true);
+      document.addEventListener("click", this.listener, true);
     }
 
     document.body.append(this.markup);
-    const popperConfig = merge(await promisify(resolveAsync(this.config.popperConfig, this)), {
-      modifiers: [
-        {
-          name: 'arrow',
-          options: {
-            element: `[${ATTR_POPUP_ARROW}]`,
-          }
-        }
-      ],
-    });
+    const popperConfig = merge(
+      await promisify(resolveAsync(this.config.popperConfig, this)),
+      {
+        modifiers: [
+          {
+            name: "arrow",
+            options: {
+              element: `[${ATTR_POPUP_ARROW}]`,
+            },
+          },
+        ],
+      }
+    );
 
-    this.popperInstance = this.config.popper(this.getSession().getFlyterElement(), this.markup, popperConfig);
+    this.popperInstance = this.config.popper(
+      this.getSession().getFlyterElement(),
+      this.markup,
+      popperConfig
+    );
     await promisify(this.config.onInit(this));
   }
 
   error(error: Error) {
     const container = this.getElement(ATTR_POPUP_ERROR_CONTAINER);
+    container.style.display = "";
     deleteNodeChildren(container);
     container.innerHTML = error.message;
   }
@@ -137,36 +178,43 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     }
     deleteNodeChildren(container);
     container.appendChild(markup);
-    (this.markup as HTMLElement).style.opacity = '1';
+    (this.markup as HTMLElement).style.opacity = "1";
     (this.popperInstance as PopperInstance).update();
     await promisify(this.config.onShow(this));
   }
 
-  async destroy() {
-    (this.markup as HTMLElement).style.opacity = '0';
+  async hide() {
+    (this.markup as HTMLElement).style.opacity = "0";
     await new Promise((resolve) => {
       setTimeout(() => {
-        if (this.closeOnClickOutside) {
-          document.removeEventListener('click', this.listener, true);
-        }
-        (this.markup as HTMLElement).remove();
-        (this.popperInstance as PopperInstance).destroy();
-        this.markup = null;
-        this.popperInstance = null;
         promisify(this.config.onHide(this)).then(resolve);
       }, this.transitionDuration);
     });
   }
 
+  async destroy() {
+    if (this.closeOnClickOutside) {
+      document.removeEventListener("click", this.listener, true);
+    }
+    (this.markup as HTMLElement).remove();
+    (this.popperInstance as PopperInstance).destroy();
+    this.markup = null;
+    this.popperInstance = null;
+  }
+
   setLoading(loading: boolean) {
     if (this.loading === loading) return;
+    this.getElement(ATTR_POPUP_ERROR_CONTAINER).style.display = "none";
+
     const loader = this.getElement(ATTR_POPUP_LOADING);
-    if (loader) loader.style.display = loading ? '' : 'none';
+    if (loader) loader.style.display = loading ? "" : "none";
     this.loading = loading;
   }
 
   private getElement(attr: string) {
-    return (this.markup as HTMLElement).querySelector(`[${attr}]`) as HTMLElement;
+    return (this.markup as HTMLElement).querySelector(
+      `[${attr}]`
+    ) as HTMLElement;
   }
 }
 

@@ -1,8 +1,11 @@
 {
   "name": "flyter",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "An inline editing library",
-  "main": "lib/index.js",
+  "source": "src/index.ts",
+  "main": "dist-commonjs/main.js",
+  "module": "dist-esm/module.js",
+  "types": "dist-esm/main.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ovesco/flyter.git"
@@ -15,35 +18,58 @@
   ],
   "author": "ovesco",
   "license": "Apache-2.0",
+  "scripts": {
+    "clean": "shx rm -rf bundles .parcel-cache dist-commonjs dist-esm",
+    "build": "npm run clean && parcel build",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
   "dependencies": {
-    "@popperjs/core": "^2.5.4",
-    "deepmerge": "^4.2.2",
-    "dompurify": "^2.2.2"
+    "@popperjs/core": "^2.11.8",
+    "deepmerge": "^4.3.1"
   },
   "devDependencies": {
-    "@types/deepmerge": "^2.2.0",
-    "@types/dompurify": "^2.0.4",
-    "parallel-webpack": "^2.6.0",
-    "parcel-bundler": "^1.12.4",
-    "sass": "^1.28.0",
-    "shx": "^0.3.3",
-    "ts-loader": "^8.0.11",
-    "typescript": "^4.1.2",
-    "webpack": "^5.9.0",
-    "webpack-cli": "^4.2.0"
+    "@parcel/packager-ts": "^2.12.0",
+    "@parcel/transformer-typescript-types": "^2.12.0",
+    "parcel": "^2.12.0",
+    "typescript": "^5.5.2",
+    "vitepress": "^1.2.3"
   },
-  "peerDependencies": {
-    "@popperjs/core": "^2.5.3"
-  },
-  "scripts": {
-    "start": "parcel docs/index.html",
-    "clean": "shx rm -rf bundles lib lib-esm",
-    "build:docs": "parcel build docs/index.html --public-url /flyter/",
-    "build:bundles": "parallel-webpack",
-    "build:lib": "tsc && tsc -m es6 --outDir lib-esm",
-    "build": "npm run clean && npm run build:bundles && npm run build:lib",
-    "prepare": "npm run build",
-    "version": "git add -A src",
-    "postversion": "git push && git push --tags"
+  "targets": {
+    "main": {
+      "isLibrary": true,
+      "distDir": "dist-commonjs"
+    },
+    "module": {
+      "isLibrary": true,
+      "distDir": "dist-esm"
+    },
+    "vanilla": {
+      "source": "src/build/flyter.vanilla.min.ts",
+      "outputFormat": "global",
+      "context": "browser",
+      "distDir": "bundles"
+    },
+    "popper": {
+      "source": "src/build/flyter.popper.min.ts",
+      "outputFormat": "global",
+      "context": "browser",
+      "distDir": "bundles"
+    },
+    "bootstrap": {
+      "source": "src/build/flyter.bootstrap.min.ts",
+      "outputFormat": "global",
+      "context": "browser",
+      "distDir": "bundles"
+    },
+    "popper-bootstrap": {
+      "source": "src/build/flyter.popper-bootstrap.min.ts",
+      "outputFormat": "global",
+      "context": "browser",
+      "distDir": "bundles"
+    }
   }
 }

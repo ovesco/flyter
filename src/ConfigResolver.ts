@@ -1,12 +1,11 @@
-import merge from 'deepmerge';
-import { DeepPartial } from './types';
-import Config from "./Config";
+import merge from "deepmerge";
+import { type DeepPartial } from "./types";
+import type Config from "./Config";
 import Instance from "./Instance";
 import { resolve } from "./util";
 
 class ConfigResolver {
-  constructor(private config: Config, private instance: Instance) {
-  }
+  constructor(private config: Config, private instance: Instance) {}
 
   update(config: DeepPartial<Config>) {
     this.config = merge(this.config, config) as Config;
@@ -17,7 +16,7 @@ class ConfigResolver {
   }
 
   get(key: string, isCallback: boolean = false) {
-    const option: any = key.split('.').reduce((cnf: any, key) => {
+    const option: any = key.split(".").reduce((cnf: any, key) => {
       return cnf[key];
     }, this.config);
 

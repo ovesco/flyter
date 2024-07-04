@@ -1,6 +1,9 @@
 node_modules
 dist
-lib
-lib-esm
+dist-commonjs
+dist-esm
 .cache
 bundles
+docs/.vitepress/dist
+docs/.vitepress/cache
+.parcel-cache

@@ -1,24 +1,23 @@
 import { FlyterType } from "../types";
 import { parseTemplate } from "../util";
 
-const FLYTER_INPUT = 'data-flyter-text-input';
+const FLYTER_INPUT = "data-flyter-text-input";
 
-type Config = {
+export type TextTypeConfig = {
   class: string;
   type: string;
   attributes: string;
   treatEmptyAsNull: boolean;
-}
+};
 
-export const baseTextConfig: Config = {
-  class: '',
-  type: 'text',
-  attributes: '',
+export const baseTextConfig: TextTypeConfig = {
+  class: "",
+  type: "text",
+  attributes: "",
   treatEmptyAsNull: true,
 };
 
-class TextType extends FlyterType<Config> {
-  
+class TextType extends FlyterType<TextTypeConfig> {
   private textElement: HTMLInputElement;
 
   init() {
@@ -32,7 +31,9 @@ class TextType extends FlyterType<Config> {
 
   getCurrentValue() {
     const { value } = this.textElement;
-    return value.trim() === '' && this.config.treatEmptyAsNull ? this.getSession().getInstance().getConfig('emptyValue') : value;
+    return value.trim() === "" && this.config.treatEmptyAsNull
+      ? this.getSession().getInstance().getConfig("emptyValue")
+      : value;
   }
 
   getReadableValue(val: any) {
@@ -43,12 +44,11 @@ class TextType extends FlyterType<Config> {
     this.textElement.disabled = status;
   }
 
-  onDestroy() {
-  }
+  onDestroy() {}
 
   private getTemplate() {
     const { type } = this.config;
-    const tag = type === 'textarea' ? type : 'input';
+    const tag = type === "textarea" ? type : "input";
     return `
       <${tag} ${this.config.attributes} type="${type}" ${FLYTER_INPUT} class="flyter-text-input ${this.config.class}" />
     `.trim();

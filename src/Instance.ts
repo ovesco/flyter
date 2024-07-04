@@ -1,13 +1,12 @@
-import merge from 'deepmerge';
+import merge from "deepmerge";
 
-import ConfigResolver from './ConfigResolver';
-import Config, {  ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from './Config';
-import EditionSession from './EditionSession';
-import { typeData, rendererData, DeepPartial } from './types';
-import { promisify, deleteNodeChildren, parseTemplate, resolve } from './util';
+import ConfigResolver from "./ConfigResolver";
+import Config, { ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from "./Config";
+import EditionSession from "./EditionSession";
+import { typeData, rendererData, DeepPartial } from "./types";
+import { promisify, deleteNodeChildren, parseTemplate, resolve } from "./util";
 
 class Instance {
-
   private session: EditionSession | null = null;
 
   public flyterElement: HTMLElement;
@@ -18,11 +17,16 @@ class Instance {
 
   private listener: (e: MouseEvent) => void;
 
-  private keyListener: ((e: KeyboardEvent) => void)  | null = null;
+  private keyListener: ((e: KeyboardEvent) => void) | null = null;
 
   private configResolver: ConfigResolver;
 
-  constructor(private domTarget: HTMLElement, private config: Config, private typeGetter: (name: string) => typeData, private rendererGetter: (name: string) => rendererData) {
+  constructor(
+    private domTarget: HTMLElement,
+    private config: Config,
+    private typeGetter: (name: string) => typeData,
+    private rendererGetter: (name: string) => rendererData
+  ) {
     this.configResolver = new ConfigResolver(config, this);
     this.value = resolve(config.initialValue, this);
     this.attachKeyEvent();
@@ -57,13 +61,11 @@ class Instance {
 
   async open() {
     if (this.session) return;
-    this.setLoading(true);
-    return new Promise(async () => {
-      const session = await this.createSession();
-      await (this.session as EditionSession).openEdition();
-      this.setLoading(false);
-      return session;
-    });
+    this.setInstanceLoading(true);
+    const session = await this.createSession();
+    await session.openEdition();
+    this.setInstanceLoading(false);
+    return session;
   }
 
   async close() {
@@ -79,20 +81,22 @@ class Instance {
 
   async setValue(val: any) {
     this.value = val;
-    this.setLoading(true);
+    this.setInstanceLoading(true);
     await this.refresh();
-    this.setLoading(false);
+    this.setInstanceLoading(false);
   }
 
   async refresh() {
-    if (this.getConfig('emptyValue') === this.value) {
-      this.flyterElement.innerHTML = resolve(this.config.emptyValueDisplay, this);
-    }
-    else {
-      this.setLoading(true);
+    if (this.getConfig("emptyValue") === this.value) {
+      this.flyterElement.innerHTML = resolve(
+        this.config.emptyValueDisplay,
+        this
+      );
+    } else {
+      this.setInstanceLoading(true);
       const res = await promisify(this.config.valueFormatter(this.value, this));
       this.flyterElement.innerHTML = res;
-      this.setLoading(false);
+      this.setInstanceLoading(false);
     }
   }
 
@@ -114,65 +118,85 @@ class Instance {
   }
 
   async destroy() {
-    const trigger = this.getConfig('trigger');
-    if (this.getConfig('triggerOnTarget') === true && trigger !== 'none') {
+    const trigger = this.getConfig("trigger");
+    if (this.getConfig("triggerOnTarget") === true && trigger !== "none") {
       this.getDomTarget().removeEventListener(trigger, this.listener, true);
     }
     if (this.keyListener !== null) {
-      window.removeEventListener('keyup', this.keyListener);
+      window.removeEventListener("keyup", this.keyListener);
     }
     await promisify(this.config.onDestroy(this));
     deleteNodeChildren(this.domTarget);
   }
 
   buildType() {
-    const { typeConfig, type } = this.typeGetter(this.getConfig('type.name'));
-    return new type(() => (this.session as EditionSession), merge(typeConfig, this.getConfig('type.config')));
+    const { typeConfig, type } = this.typeGetter(this.getConfig("type.name"));
+    return new type(
+      () => this.session as EditionSession,
+      merge(typeConfig, this.getConfig("type.config"))
+    );
   }
 
   buildRenderer() {
-    const { rendererConfig, renderer } = this.rendererGetter(this.getConfig('renderer.name'));
-    return new renderer(() => (this.session as EditionSession), merge(rendererConfig, this.getConfig('renderer.config')));
+    const { rendererConfig, renderer } = this.rendererGetter(
+      this.getConfig("renderer.name")
+    );
+    return new renderer(
+      () => this.session as EditionSession,
+      merge(rendererConfig, this.getConfig("renderer.config"))
+    );
   }
 
   private attachKeyEvent() {
-    if (this.getConfig('submitOnEnter') === true) {
+    if (this.getConfig("submitOnEnter") === true) {
       this.keyListener = (event: KeyboardEvent) => {
         const session = this.getCurrentSession();
-        if (session && event.code === 'Enter') session.submit();
+        if (session && event.code === "Enter") session.submit();
       };
-      window.addEventListener('keyup', this.keyListener);
+      window.addEventListener("keyup", this.keyListener);
     }
   }
 
   private async createSession() {
     if (this.session) return this.session;
-    this.session = new EditionSession(this, this.buildType(), this.buildRenderer());
+    this.session = new EditionSession(
+      this,
+      this.buildType(),
+      this.buildRenderer()
+    );
 
     await promisify(this.config.onOpen(this));
     await this.session.initialize();
     return this.session;
   }
 
-  private setLoading(loading: boolean) {
+  private setInstanceLoading(loading: boolean) {
     if (this.loading === loading) return;
     this.config.onLoading(loading, this);
-    const loadingContainer = this.domTarget.querySelector(`[${ATTR_LOADING_CONTAINER}]`) as HTMLElement;
-    if (loading) {
-      loadingContainer.appendChild(parseTemplate(this.getConfig('template.loading') as string));
-    } else {
+    const loadingContainer = this.domTarget.querySelector(
+      `[${ATTR_LOADING_CONTAINER}]`
+    );
+
+    if (loading && loadingContainer) {
+      loadingContainer.appendChild(
+        parseTemplate(this.getConfig("template.loading") as string)
+      );
+    } else if (loadingContainer) {
       deleteNodeChildren(loadingContainer as HTMLElement);
     }
+
     this.loading = loading;
   }
 
   private buildFlyterTarget() {
-    const markup = parseTemplate(this.getConfig('template.read'));
-    const element = markup.querySelector(`[${ATTR_READ_CONTAINER}]`) as HTMLElement;
-    const trigger = this.getConfig('trigger');
-    if (trigger !== 'none') {
-      const event = trigger === 'click' ? 'click' : 'mouseover';
-      if (this.getConfig('triggerOnTarget') === true) {
+    const markup = parseTemplate(this.getConfig("template.read"));
+    const element = markup.querySelector(
+      `[${ATTR_READ_CONTAINER}]`
+    ) as HTMLElement;
+    const trigger = this.getConfig("trigger");
+    if (trigger !== "none") {
+      const event = trigger === "click" ? "click" : "mouseover";
+      if (this.getConfig("triggerOnTarget") === true) {
         this.getDomTarget().addEventListener(event, this.listener, true);
       } else {
         element.addEventListener(event, this.listener, true);
