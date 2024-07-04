@@ -1,6 +1,6 @@
 {
   "name": "flyter",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An inline editing library",
   "source": "src/index.ts",
   "main": "dist-commonjs/main.js",
