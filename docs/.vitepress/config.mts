@@ -6,14 +6,6 @@ export default defineConfig({
   // @ts-ignore
   base: process.env.NODE_ENV === "production" ? "/flyter/" : undefined,
   description: "The flyter library documentation",
-  head: [
-    [
-      "script",
-      {
-        src: "https://cdn.tailwindcss.com",
-      },
-    ],
-  ],
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },

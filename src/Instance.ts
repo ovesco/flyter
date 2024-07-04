@@ -122,7 +122,7 @@ class Instance {
     if (this.getConfig("triggerOnTarget") === true && trigger !== "none") {
       this.getDomTarget().removeEventListener(trigger, this.listener, true);
     }
-    if (this.keyListener !== null) {
+    if (this.keyListener !== null && window) {
       window.removeEventListener("keyup", this.keyListener);
     }
     await promisify(this.config.onDestroy(this));
@@ -148,7 +148,7 @@ class Instance {
   }
 
   private attachKeyEvent() {
-    if (this.getConfig("submitOnEnter") === true) {
+    if (this.getConfig("submitOnEnter") === true && window) {
       this.keyListener = (event: KeyboardEvent) => {
         const session = this.getCurrentSession();
         if (session && event.code === "Enter") session.submit();

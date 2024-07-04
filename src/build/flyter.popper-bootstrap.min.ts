@@ -4,4 +4,7 @@ import { withBootstrapTheme } from "../index";
 withBootstrapTheme();
 
 // @ts-ignore
-window.flyter = flyter;
+if (window) {
+  // @ts-ignore
+  window.flyter = flyter;
+}

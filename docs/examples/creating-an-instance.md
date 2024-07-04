@@ -31,7 +31,9 @@ or using custom HTML tags.
 
 ## Javascript Configuration
 Simply pass a configuration object to the instance created through `attach`.
+<ClientOnly>
 <Flyter :config="config" />
+</ClientOnly>
 
 ```ts
 flyter.attach('#ex-doc', {

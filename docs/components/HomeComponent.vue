@@ -83,25 +83,39 @@ onMounted(() => {
       class="col-span-2 md:col-span-1 flex flex-col items-center justify-center"
     >
       <p class="text-2xl font-semibold">Easy to Setup</p>
-      <Flyter :display-on-start="true" value="For simple text" />
+      <ClientOnly>
+        <Flyter
+          :display-on-start="true"
+          :config="{
+            renderer: { config: { popperConfig: { placement: 'bottom' } } },
+          }"
+          value="For simple text"
+        />
+      </ClientOnly>
     </div>
     <div
       class="col-span-2 md:col-span-1 flex flex-col items-center justify-center"
     >
       <p class="text-2xl font-semibold">Various</p>
-      <Flyter :config="typesConfig" />
+      <ClientOnly>
+        <Flyter :config="typesConfig" />
+      </ClientOnly>
     </div>
     <div
       class="col-span-2 md:col-span-1 flex flex-col items-center justify-center"
     >
       <p class="text-2xl font-semibold">Two Renderers</p>
-      <Flyter :config="renderers" />
+      <ClientOnly>
+        <Flyter :config="renderers" />
+      </ClientOnly>
     </div>
     <div
       class="col-span-2 md:col-span-1 flex flex-col items-center justify-center"
     >
       <p class="text-2xl font-semibold">Massively</p>
-      <Flyter :config="configurable" />
+      <ClientOnly>
+        <Flyter :config="configurable" />
+      </ClientOnly>
     </div>
   </div>
 </template>

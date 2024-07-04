@@ -6,4 +6,7 @@ withBootstrapTheme();
 export default flyter;
 
 // @ts-ignore
-window.flyter = flyter;
+if (window) {
+  // @ts-ignore
+  window.flyter = flyter;
+}

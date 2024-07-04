@@ -105,31 +105,42 @@ class Flyter {
       baseConfig,
       dirtyAttrConfig,
       config,
-    ]).buildConfig().themes;
-    const theme = this.resolveThemeConfig(themeConfig);
+    ]).buildConfig();
+    const theme = this.resolveThemeConfig(themeConfig.themes);
     const configMerger = new Merger<Config>([baseConfig]);
     configMerger.pushConfig(theme.config || {});
     configMerger.pushConfig(attrConfigResolver(target));
     configMerger.pushConfig(config);
+
     return new Instance(
       target,
       configMerger.buildConfig(),
-      (name: string) => this.getType(name, theme.types || {}),
-      (name: string) => this.getRenderer(name, theme.renderers || {})
+      (name: string) =>
+        this.getType(name, theme.types || {}, config.type?.config),
+      (name: string) =>
+        this.getRenderer(name, theme.renderers || {}, config.renderer?.config)
     );
   }
 
-  private getType(name: string, themeConfig: anyConfigObject) {
+  private getType(
+    name: string,
+    themeConfig: anyConfigObject,
+    givenTypeConfig: anyConfigObject = {}
+  ) {
     if (!this.types.has(name)) throw new Error(`Unknown type ${name}`);
     const { baseTypeConfig, type } = this.types.get(name) as TypeMapData;
     const typeConfig =
       themeConfig[name] === undefined
         ? baseTypeConfig
-        : merge(baseTypeConfig, themeConfig[name]);
+        : merge(baseTypeConfig, themeConfig[name], givenTypeConfig);
     return { typeConfig, type };
   }
 
-  private getRenderer(name: string, themeConfig: anyConfigObject) {
+  private getRenderer(
+    name: string,
+    themeConfig: anyConfigObject,
+    givenRendererConfig: anyConfigObject = {}
+  ) {
     if (!this.renderers.has(name)) throw new Error(`Unknown renderer ${name}`);
     const { baseRendererConfig, renderer } = this.renderers.get(
       name
@@ -137,7 +148,7 @@ class Flyter {
     const rendererConfig =
       themeConfig[name] === undefined
         ? baseRendererConfig
-        : merge(baseRendererConfig, themeConfig[name]);
+        : merge(baseRendererConfig, themeConfig[name], givenRendererConfig);
     return { rendererConfig, renderer };
   }
 

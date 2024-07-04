@@ -201,5 +201,5 @@ export const attrConfigResolver = (element: HTMLElement) => {
     current[lastKey] = value;
   });
 
-  return config;
+  return config as Config;
 };

@@ -67,7 +67,7 @@ export default () => ({
             let className = "arrow h-0 w-0 border-x-8 border-x-transparent";
             if (placement === "bottom") {
               className +=
-                " border-b-[12px] border-b-slate-200 dark:border-t-slate-700 -mt-[8px]";
+                " border-b-[12px] border-b-slate-200 dark:border-b-slate-700 -mt-[8px]";
             } else if (placement === "top") {
               className +=
                 " border-t-[12px] border-t-slate-200 dark:border-t-slate-700 top-full -mt-1";

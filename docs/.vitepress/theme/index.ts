@@ -1,34 +1,7 @@
 import DefaultTheme from "vitepress/theme";
 import { h } from "vue";
 import HomeComponent from "../../components/HomeComponent.vue";
-import flyterTheme from "./flyter-theme";
-import flyter, {
-  withPopupRenderer,
-  withInlineRenderer,
-  withTextType,
-  withSelectType,
-  withCheckboxType,
-  withRadioType,
-} from "../../../src";
-withInlineRenderer();
-withPopupRenderer({
-  popperConfig: {
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [0, 10, 0, 10],
-        },
-      },
-    ],
-  },
-});
-withTextType();
-withSelectType();
-withCheckboxType();
-withRadioType();
-
-flyter.registerTheme("flyter", flyterTheme, {});
+import "./tailwind.min.css";
 
 export default {
   extends: DefaultTheme,
