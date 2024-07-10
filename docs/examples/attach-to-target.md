@@ -9,18 +9,23 @@ As such you can use `triggerOnTarget` to attach the trigger on the given
 element.
 
 ```ts
-flyter.attach('.flyter-btn', {
-  // will attach trigger to the target given during initialization
-  // in this example, our button
+// <button> is by definition clickable, so if you modify its style it might
+// happen that you click on the button but not the element flyter appended to it
+// so nothing happens even though the UI acted as if you clicked the button.
+// Setting `triggerOnTarget` will attach the event to the button directly fixing
+// the problem
+flyter.attach('button', {
   triggerOnTarget: true,
   renderer: {
     config: {
       popperConfig: {
         modifiers: [
           {
+            // If your button is big, you can use the offset modifier of popperjs
+            // to move the popup outside your button's boundaries
             name: 'offset',
             options: {
-              offset: [50, 70], // offset to match this big button
+              offset: [50, 70],
             }
           }
         ]
