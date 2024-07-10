@@ -7,11 +7,11 @@ and build upon it.
 ```vue
 <script setup lang>
 import flyter from "../../src";
-import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";
+import { ref, onMounted, onBeforeUnmount, defineProps, watch } from "vue";
 
 // We're exposing the component with the `v-model` directive support
 const model = defineModel();
-const props = defineProps(["config"]);
+const props = defineProps(["config", "disabled"]);
 
 // Keep track of the flyter instance of this component
 // No need to wrap it in ref, we do not want to make it reactive
@@ -36,6 +36,20 @@ onMounted(() => {
       model.value = value;
     },
   });
+});
+
+// Watch for changes in the disabled props to call corresponding
+// methods on the instance
+watch(props.disabled, (value) => {
+  if (!instance) {
+    return;
+  }
+
+  if (value) {
+    instance.disable();
+  } else {
+    instance.enable();
+  }
 });
 
 // Destroy the flyter instance before unmounting to free memory

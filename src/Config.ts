@@ -7,6 +7,7 @@ const ATTR_SUBMIT_BTN = "data-flyter-submit";
 const ATTR_CANCEL_BTN = "data-flyter-cancel";
 const ATTR_READ_CONTAINER = "data-flyter-read";
 const ATTR_LOADING_CONTAINER = "data-flyter-loading";
+const ATTR_DISABLED = "disabled";
 
 export {
   ATTR_EDIT_CONTAINER,
@@ -15,6 +16,7 @@ export {
   ATTR_CANCEL_BTN,
   ATTR_READ_CONTAINER,
   ATTR_LOADING_CONTAINER,
+  ATTR_DISABLED,
 };
 
 export default interface Config {
@@ -31,6 +33,8 @@ export default interface Config {
   emptyValueDisplay: string | ((instance: Instance) => string);
   valueFormatter: (value: any, instance: Instance) => string | Promise<string>;
   onOpen: (instance: Instance) => Promise<any> | any;
+  onDisabled: (instance: Instance) => Promise<any> | any;
+  onEnabled: (Instance: Instance) => Promise<any> | any;
   onClose: (instance: Instance) => Promise<any> | any;
   onDestroy: (instance: Instance) => Promise<any> | any;
   onSubmit: (value: any, instance: Instance) => Promise<any> | any;
@@ -90,6 +94,8 @@ export const baseConfig: Config = {
   },
   onOpen: () => null,
   onClose: () => null,
+  onDisabled: () => null,
+  onEnabled: () => null,
   onLoading: () => null,
   onRendererLoading: () => null,
   onDestroy: () => null,

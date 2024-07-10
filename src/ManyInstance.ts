@@ -36,8 +36,16 @@ class ManyInstance {
     return this.asyncBatch((it) => it.destroy());
   }
 
+  async enableAll() {
+    this.asyncBatch((it) => it.enable());
+  }
+
+  disableAll() {
+    this.batch((it) => it.disable());
+  }
+
   private async asyncBatch(fn: (it: Instance) => any) {
-    return Promise.all(this.instances.map((it) => fn(it)));
+    return await Promise.all(this.instances.map((it) => fn(it)));
   }
 
   private batch(fn: (i: Instance) => any) {

@@ -13,4 +13,6 @@ Those configuration options allow you to hook into the instance lifecycle and pe
 |onRendererLoading|`(status: boolean, instance) => any`|Called when the renderer (instance in edition) is in loading mode|`() => null`|
 |onError|`async (error, instance) => any`|Called when an error is thrown somewhere|`(e) => console.log(e)`|
 |onCancel|`async (instance) => any`|Called when an edition session is canceled|`() => null`|
+|onDisabled|`async (instance) => any`|Called when a Flyter instance is disabled|`() => null`|
+|onEnabled|`async (instance) => any`|Called when a Flyter instance is enabled|`() => null`|
 |validate|`async (value, instance) => boolean | Error`|Can be used to validate the submitted value, before calling the `onSubmit` callback|`() => true`|

@@ -1,7 +1,7 @@
 import merge from "deepmerge";
 
 import ConfigResolver from "./ConfigResolver";
-import Config, { ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from "./Config";
+import Config, { ATTR_DISABLED, ATTR_LOADING_CONTAINER, ATTR_READ_CONTAINER } from "./Config";
 import EditionSession from "./EditionSession";
 import { typeData, rendererData, DeepPartial } from "./types";
 import { promisify, deleteNodeChildren, parseTemplate, resolve } from "./util";
@@ -13,7 +13,9 @@ class Instance {
 
   private value: any;
 
-  private loading: boolean = false;
+  private loading = false;
+
+  private disabled = false;
 
   private listener: (e: MouseEvent) => void;
 
@@ -60,6 +62,7 @@ class Instance {
   }
 
   async open() {
+    if (this.disabled) return;
     if (this.session) return;
     this.setInstanceLoading(true);
     const session = await this.createSession();
@@ -115,6 +118,28 @@ class Instance {
   deleteSession() {
     if (this.session === null) return;
     this.session = null;
+  }
+
+  async disable() {
+    if (this.disabled) return;
+    this.disabled = true;
+    if (this.flyterElement) {
+      this.flyterElement.setAttribute(ATTR_DISABLED, "");
+    }
+
+    await this.config.onDisabled(this);
+    if (this.getCurrentSession()) {
+      await this.close();
+    }
+  }
+
+  async enable() {
+    if (!this.disabled) return;
+    this.disabled = false;
+    await this.config.onEnabled(this);
+    if (this.flyterElement) {
+      this.flyterElement.removeAttribute(ATTR_DISABLED);
+    }
   }
 
   async destroy() {

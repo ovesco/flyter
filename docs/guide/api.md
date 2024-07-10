@@ -38,12 +38,12 @@ instance.getRawConfig();
 /**
  * Opens an edition session
  */
-instance.open(); // ASYNC
+async instance.open();
 
 /**
  * Closes an eventually open session
  */
-instance.close(); // ASYNC
+async instance.close();
 
 /**
  * Returns the current value of the instance
@@ -53,17 +53,30 @@ instance.getValue();
 /**
  * Sets the current value
  */
-instance.setValue(val); // ASYNC
+async instance.setValue(val);
 
 /**
  * Refresh the instance, refreshing its displayed value
  */
-instance.refresh(); // ASYNC
+async instance.refresh();
 
 /**
  * Destroys the instance, removing it from the DOM
  */
-instance.destroy(); // ASYNC
+async instance.destroy();
+
+/**
+ * Disables the instance.
+ * This sets the attribute `disabled` on the element
+ * and prevents the session creation trigger from happening
+ * If an edition session was open, it is closed.
+ */
+async instance.disable();
+
+/**
+ * Enables the instance if it was disabled
+ */
+async instance.enable();
 
 /**
  * Returns the current edition session if any. See below for further information
@@ -99,27 +112,27 @@ session.getMarkup();
 /**
  * Initialize the session by initializing its type
  */
-session.initialize(); // ASYNC
+async session.initialize();
 
 /**
  * Opens the session, initializing the renderer and markup and showing it
  */
-session.openEdition(); // ASYNC
+async session.openEdition();
 
 /**
  * Cancels this session and closes it
  */
-session.cancel(); // ASYNC
+async session.cancel();
 
 /**
  * Close this session and notify the instance to delete it
  */
-session.closeSession(); // ASYNC
+async session.closeSession();
 
 /**
  * Submits the current type's value
  */
-session.submit(); // ASYNC
+async session.submit();
 
 /**
  * Tells the underlying renderer to enter in loading mode and disables
@@ -154,20 +167,30 @@ manyInstance.getCurrentSessions();
 /**
  * Opens all instances
  */
-manyInstance.openAll(); // ASYNC
+async manyInstance.openAll();
 
 /**
  * Close all instances
  */
-manyInstance.closeAll(); // ASYNC
+async manyInstance.closeAll();
 
 /**
  * Refresh all instances
  */
-manyInstance.refreshAll(); // ASYNC
+async manyInstance.refreshAll();
 
 /**
  * Destroy all instances
  */
-manyInstance.destroyAll(); // ASYNC
+async manyInstance.destroyAll();
+
+/**
+ * Enable all instances
+ */
+async manyInstance.enableAll();
+
+/**
+ * disable all instances
+ */
+async manyInstance.disableAll();
 ```
