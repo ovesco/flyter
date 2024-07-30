@@ -21,6 +21,7 @@ export type PopupConfigType = {
   title: valOrAsync<string | null>;
   closeOnClickOutside: valOrAsync<boolean>;
   popupTemplate: valOrAsync<string>;
+  popupContainer: valOrAsync<string | HTMLElement>;
   popupClass: valOrAsync<string>;
   onInit:
     | ((renderer: PopupRenderer) => any)
@@ -63,6 +64,7 @@ export const PopupConfig: PopupConfigType = {
   transitionDuration: 300,
   title: null,
   closeOnClickOutside: true,
+  popupContainer: 'body',
   popupClass: "",
   popupTemplate: `
 <div class="flyter-popup">
@@ -140,7 +142,8 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
       document.addEventListener("click", this.listener, true);
     }
 
-    document.body.append(this.markup);
+    const popupContainer = await this.getPopupContainer();
+    popupContainer.append(this.markup);
     const popperConfig = merge(
       await promisify(resolveAsync(this.config.popperConfig, this)),
       {
@@ -215,6 +218,17 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
     return (this.markup as HTMLElement).querySelector(
       `[${attr}]`
     ) as HTMLElement;
+  }
+
+  private async getPopupContainer() {
+    let popupContainer = 
+      await promisify(resolveAsync(this.config.popupContainer, this));
+    console.log(popupContainer);
+    if (typeof popupContainer === 'string') {
+      popupContainer = document.querySelector(popupContainer) as HTMLElement;
+    }
+
+    return popupContainer as HTMLElement;
   }
 }
 

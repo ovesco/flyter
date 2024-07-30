@@ -1,11 +1,11 @@
 {
   "name": "flyter",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "An inline editing library",
   "source": "src/index.ts",
-  "main": "dist-commonjs/main.js",
-  "module": "dist-esm/module.js",
-  "types": "dist-esm/main.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ovesco/flyter.git"
@@ -19,8 +19,10 @@
   "author": "ovesco",
   "license": "Apache-2.0",
   "scripts": {
-    "clean": "shx rm -rf bundles .parcel-cache dist-commonjs dist-esm",
-    "build": "npm run clean && parcel build",
+    "clean": "shx rm -rf dist",
+    "build": "npm run clean && npm run build:core && npm run build:web",
+    "build:core": "tsup src/index.ts --dts --format esm,cjs",
+    "build:web": "tsup --entry src/build/flyter.vanilla.min.ts --entry src/build/flyter.bootstrap.min.ts --entry src/build/flyter.popper.min.ts --entry src/build/flyter.popper-bootstrap.min.ts --format iife --minify",
     "version": "git add -A src",
     "postversion": "git push && git push --tags",
     "docs:dev": "vitepress dev docs",
@@ -29,47 +31,14 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "deepmerge": "^4.3.1"
+    "deepmerge": "^4.3.1",
+    "tsup": "^8.2.3"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "^2.12.0",
-    "@parcel/transformer-typescript-types": "^2.12.0",
-    "parcel": "^2.12.0",
+    "@swc/core": "^1.7.3",
+    "shx": "^0.3.4",
+    "tslib": "^2.6.3",
     "typescript": "^5.5.2",
     "vitepress": "^1.2.3"
-  },
-  "targets": {
-    "main": {
-      "isLibrary": true,
-      "distDir": "dist-commonjs"
-    },
-    "module": {
-      "isLibrary": true,
-      "distDir": "dist-esm"
-    },
-    "vanilla": {
-      "source": "src/build/flyter.vanilla.min.ts",
-      "outputFormat": "global",
-      "context": "browser",
-      "distDir": "bundles"
-    },
-    "popper": {
-      "source": "src/build/flyter.popper.min.ts",
-      "outputFormat": "global",
-      "context": "browser",
-      "distDir": "bundles"
-    },
-    "bootstrap": {
-      "source": "src/build/flyter.bootstrap.min.ts",
-      "outputFormat": "global",
-      "context": "browser",
-      "distDir": "bundles"
-    },
-    "popper-bootstrap": {
-      "source": "src/build/flyter.popper-bootstrap.min.ts",
-      "outputFormat": "global",
-      "context": "browser",
-      "distDir": "bundles"
-    }
   }
 }

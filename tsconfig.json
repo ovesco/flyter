@@ -2,12 +2,10 @@
   "compilerOptions": {
       "lib": ["dom", "ES2017"],
       "esModuleInterop": true,
-      "module": "CommonJS",
+      "module": "ESNext",
       "target": "ES5",
       "strictPropertyInitialization": false,
       "strict": true,
-      "outDir": "./lib",
-      "declaration": true,
       "rootDir": "src",
       "noUnusedParameters": true,
       "moduleResolution": "node",
