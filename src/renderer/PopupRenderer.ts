@@ -223,7 +223,6 @@ class PopupRenderer extends FlyterRenderer<PopupConfigType> {
   private async getPopupContainer() {
     let popupContainer = 
       await promisify(resolveAsync(this.config.popupContainer, this));
-    console.log(popupContainer);
     if (typeof popupContainer === 'string') {
       popupContainer = document.querySelector(popupContainer) as HTMLElement;
     }

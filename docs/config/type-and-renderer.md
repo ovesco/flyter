@@ -69,7 +69,7 @@ flyter.attach('div', {
 |title|`string`*|Add a title to the popup|`null`|
 |popupTemplate|`string`*|Template used by the renderer|`See below`|
 |popupClass|`string`*|Add a class to the renderer container|`''`|
-|popupContainer|`string | HTMLElement`*|Specify the HTML node that will contain the popup|`'body'`|
+|popupContainer|`string \| HTMLElement`*|Specify the HTML node that will contain the popup|`'body'`|
 |onInit|`async (renderer) => any`|Called when the renderer is initialized|`() => null`|
 |onShow|`async (renderer) => any`|Called when the renderer becomes visible|`() => null`|
 |onHide|`async (renderer) => any`|Called when the renderer is removed from the DOM|`() => null`|
